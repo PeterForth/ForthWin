@@ -1,0 +1,3 @@
+cd ..
+@echo Wait a bit while compiling...
+@jpf375c.exe src\spf.f
