@@ -1,0 +1,951 @@
+<HTML>
+<HEAD>
+ <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1251">
+ <STYLE type="text/css">
+body {background:white;}
+* {font-family: arial, verdana, sans-serif}
+code {font-family: 'Lucida Console', 'Courier New', monospace}
+pre, code { background : #EEEEF4} </STYLE>
+</HEAD>
+<BODY>
+<div align="center">
+<table width="800">
+<tr><td align="left">
+<p><a id="start"/></p>
+
+<h1><a href="readme.en.html">SPF</a> specific</h1>
+
+<p><title>SPF specific</title></p>
+
+<p><i>A short introduction, for those already familiar with some
+Forth-system and ANS'94 standard.</i></p>
+
+<p><small>Last update: $Date: 2008/11/14 20:13:12 $</small></p>
+
+<!-- Translation is in sync with intro.ru.md rev. 1.40 -->
+
+<hr />
+
+<p>[<a href="intro.ru.html">Russian</a>] [<a href="intro.en.html">English</a>]</p>
+
+<hr />
+
+<h2>Contents</h2>
+
+<ul>
+<li><a href="#devel">Installed SPF4. And what's next?</a></li>
+<li><a href="#include">How to run and include forth code?</a></li>
+<li><a href="#require">REQUIRE</a></li>
+<li><a href="#included-path">INCLUDED search path</a></li>
+<li><a href="#module">Modules</a></li>
+<li><a href="#case">Case sensitivity</a></li>
+<li><a href="#numbers">Numbers</a></li>
+<li><a href="#float">Float numbers</a></li>
+<li><a href="#struct">Structures, records</a></li>
+<li><a href="#forget">Where is FORGET?</a></li>
+<li><a href="#not">Where is NOT?</a></li>
+<li><a href="#defer">Where is DEFER?</a></li>
+<li><a href="#cls">How to clear the stack with one word?</a></li>
+<li><a href="#comments">Comments</a></li>
+<li><a href="#string">Strings</a></li>
+<li><a href="#task">Multitasking</a></li>
+<li><a href="#voc">Vocabularies</a></li>
+<li><a href="#locals">Local and temporary variables</a></li>
+<li><a href="#save">Creating executable modules</a></li>
+<li><a href="#dll">Using external DLLs</a></li>
+<li><a href="#debug">Debugging facilities</a></li>
+<li><a href="#opt">Optimizer</a></li>
+<li><a href="#ans">ANS support</a></li>
+<li><a href="#notfound">NOTFOUND</a></li>
+<li><a href="#scatcoln">Scattered colons</a></li>
+<li><a href="#doublecolon">Search scope</a></li>
+<li><a href="#catch">Exceptions</a></li>
+</ul>
+
+<hr />
+
+<p><a id="devel"/></p>
+
+<h3><a href="#devel">Installed SPF4. And what's next?</a></h3>
+
+<p>The first and the most important - placement of your working files. There is a
+subdir <code>DEVEL</code> in the SPF directory where all the the developers' code is located
+(including yours). Create a subdir there, for example ~john. Now you can refer to 
+your files in short form, <code>~john/prog/myprog.f</code>. It simplifies mutual access to 
+contributed code. The general convention is to place libraries in the subdirectory 
+named <code>lib</code>, and example programs in <code>prog</code>.</p>
+
+<p>The <code>devel</code> directory contains the contributed code of other SP-Forth'ers, the
+short (very short) list with descriptions is available: 
+<a href="devel.en.html">SPF_DEVEL</a>, or you can scan the directory yourself.</p>
+
+<p>There is also a fancy GUI frontend for SPF. It is located in
+<code>samples/win/spfwc</code>. Just run the compile.bat script and copy the resulting
+binary <code>spf4wc.exe</code> to the root installation folder (near to <code>spf4.exe</code>).</p>
+
+<hr />
+
+<p><a id="include"/></p>
+
+<h3><a href="#include">How to run and include forth code?</a></h3>
+
+<ul>
+<li><p>Running the file from the command line is fairly simple, just start SPF with 
+the file path as a command line parameter, </p>
+
+<pre><code>spf.exe ~john/prog/myprog.f
+</code></pre>
+
+<p>Note, that include path can be either absolute or relative to the
+<a href="#devel">devel</a> directory. </p></li>
+<li><p>In SPF console (interpretation mode) just type in the name of the file:</p>
+
+<pre><code>~john/prog/myprog.f
+</code></pre></li>
+<li><p>For compatibility reasons, it is better to include it in a standard way:</p>
+
+<pre><code>S" ~vasya/prog/myprog.f" INCLUDED
+</code></pre></li>
+<li><p>But the recommended approach is to use <code>REQUIRE</code> word.</p></li>
+</ul>
+
+<hr />
+
+<p><a id="require"/></p>
+
+<h3><a href="#require">REQUIRE</a></h3>
+
+<p>SPF has a non-standard word <code>REQUIRE ("word" "file" -- )</code>, where <code>word</code> is
+some word defined in the library <code>file</code>. If <code>word</code> is present in the 
+context vocabulary, <code>REQUIRE</code> will consider the library already loaded. 
+This prevents from loading the same libraries again. At contrary, if <code>REQUIRE</code>
+fails to find <code>word</code> - the library is included as always (via <code>INCLUDED</code>).
+For example:</p>
+
+<pre><code>REQUIRE CreateSocket ~ac/lib/win/winsock/sockets.f
+REQUIRE ForEach-Word ~pinka/lib/words.f
+REQUIRE ENUM ~nn/lib/enum.f
+</code></pre>
+
+<p><strong>NB:</strong> Always select the most unique word from the included library as the
+first argument for <code>REQUIRE</code>.</p>
+
+<hr />
+
+<p><a id="included-path"/></p>
+
+<h3><a href="#included-path">INCLUDED search path</a></h3>
+
+<p><code>S" file.f" INCLUDED</code> will search following locations in specified order </p>
+
+<ul>
+<li>the short name <code>file.f</code> (i.e. in the current directory)</li>
+<li><code>PATH_TO_SPF.EXE/devel/file.f</code> (thus allowing to use other spf developers' code), </li>
+<li><code>PATH_TO_SPF.EXE/file.f</code> (thus including standard libraries and other files from SPF distribution). </li>
+</ul>
+
+<p>If you need to specify more paths (for example to use some forth code shared between
+several forth systems, or whatever - any code that is not in the spf
+files subtree and cannot be addressed relatively from your current
+file), then you can either redefine <code>FIND-FULLNAME</code> (which is <code>VECT</code>) or use
+external lib - <code>~ygrek/spf/included.f</code>. All you need is to write in
+spf4.ini</p>
+
+<pre><code>~ygrek/spf/included.f
+with: my_path/
+S" my path with spaces/" with
+</code></pre>
+
+<p>and all the files will be searched in <code>my_path</code> in addition to the
+earlier described algorithm (<code>my_path</code> can be either absolute or relative
+spf.exe). </p>
+
+<hr />
+
+<p><a id="module"/></p>
+
+<h3><a href="#module">Modules</a></h3>
+
+<p>SPF has modules, which hide the internal implementation and leave visible the
+words of the outer interface.</p>
+
+<pre><code>MODULE: john-lib
+\ inner words
+EXPORT
+\ interface words, compiled to the outer vocabulary, thus seen from the external world
+DEFINITIONS
+\ inner words again
+EXPORT
+\ you get the idea :)
+;MODULE
+</code></pre>
+
+<p>You can write <code>MODULE: john-lib</code> several times - all the consequent code will
+compile to the existing module, not overwriting it. Actually, the word defined
+by <code>MODULE:</code> is a simple <a href="#voc">vocabulary</a>.</p>
+
+<hr />
+
+<p><a id="case"/></p>
+
+<h3><a href="#case">Case sensitivity</a></h3>
+
+<p>SPF is case-sensitive, i.e. the words <code>CHAR</code>, <code>Char</code> and <code>char</code> are different
+words. Switching to case-insensitive mode is as simple as including file
+<code>lib/ext/caseins.f</code>. </p>
+
+<p>Switching case-insensitivity on and off is possible with <code>CASE-INS</code> variable :</p>
+
+<pre><code>REQUIRE CASE-INS lib/ext/caseins.f
+2 dup * .
+CASE-INS OFF \ make SPF case sensitive as before
+2 DUP * .
+CASE-INS ON  \ enable case insensitivity
+2 dup * .
+</code></pre>
+
+<hr />
+
+<p><a id="numbers"/></p>
+
+<h3><a href="#numbers">Numbers</a></h3>
+
+<p>You can input hexadecimal numbers at any time independently of the current
+BASE in the following manner:</p>
+
+<pre><code>0x7FFFFFFF
+</code></pre>
+
+<p>The number is treated as double (i.e. represented with 2 cells on the stack) 
+if it has dot at the end :</p>
+
+<pre><code>9999999999. 1. D+ D.
+</code></pre>
+
+<hr />
+
+<p><a id="float"/></p>
+
+<h3><a href="#float">Float numbers</a></h3>
+
+<p>Float numbers are recognized in form <code>[+|-][dddd][.][dddd]e[+|-][dddd]</code> after
+including <code>lib/include/float2.f</code>. So the necessary attribute of the float number
+is the exponent symbol - <code>e</code>.</p>
+
+<p>Float wordset is implemented as defined by ANS-94 :</p>
+
+<pre><code>REQUIRE F. lib/include/float2.f
+0.1e 0.2e F+ F.
+FVARIABLE a
+FPI a F!
+a F@ F.
+</code></pre>
+
+<p>The words <code>D&gt;F ( D: d -- F: f )</code> and <code>F&gt;D ( F: f -- D: d )</code> transfer double integer
+values from data to float stack and reverse. The fractional part of float number is 
+truncated in this case. Similar words for single values are available :</p>
+
+<pre><code>10 DS&gt;F 3 DS&gt;F F+ F&gt;DS .
+</code></pre>
+
+<p>Float stack is implemented using the hardware x87 stack, hence the inherited 
+features (circular stack with maximum capacity of 8 elements).</p>
+
+<hr />
+
+<p><a id="struct"/></p>
+
+<h3><a href="#struct">Structures, records</a></h3>
+
+<p>Records are created with the <code>--</code> word (the same as <code>FIELD</code>). Example:</p>
+
+<pre><code>0
+CHAR -- flag
+CELL -- field
+10 CELLS -- arr
+CONSTANT struct
+</code></pre>
+
+<p>The words <code>flag</code>, <code>field</code> and <code>arr</code> will add their offset to the address on the
+stack when executed. And the <code>struct</code> constant contains the size of the whole
+record. Consider:</p>
+
+<pre><code>struct ALLOCATE THROW VALUE s \ requested memory from heap for the single struct instance
+1 s flag C!  10 s field ! \ set the struct fields' values
+s arr 10 CELLS DUMP \ output the contents of the array in struct
+s FREE THROW \ free memory
+</code></pre>
+
+<p>Structures can be inherited:</p>
+
+<pre><code>0
+CELL -- x
+CELL -- y
+CONSTANT point \ point owns two fields
+
+point
+CELL -- radius
+CONSTANT circle \ circle owns: x, y, radius
+
+point
+CELL -- w
+CELL -- h
+CONSTANT rect \ rect owns: x, y, w, h
+</code></pre>
+
+<hr />
+
+<p><a id="forget"/></p>
+
+<h3><a href="#forget">Where is FORGET?</a></h3>
+
+<p>No <code>FORGET</code>. But we have <code>MARKER ( "name" -- )</code> (use <code>lib/include/core-ext.f</code>).</p>
+
+<hr />
+
+<p><a id="not"/></p>
+
+<h3><a href="#not">Where is NOT?</a></h3>
+
+<p>The word <code>NOT</code> (logical negation) is not implemented. It can be added with 
+<code>~profit/lib/logic.f</code> extension. Companion words <code>&gt;=</code> (more or equal) and 
+<code>&lt;=</code> (less or equal) are also defined there.</p>
+
+<hr />
+
+<p><a id="defer"/></p>
+
+<h3><a href="#defer">Where DEFER?</a></h3>
+
+<p>Deferred words in SPF are created with <code>VECT ( "word" -- )</code> (as 'VECTor'). 
+<code>TO ( xt "word" -- )</code> assigns action to the deferred word.</p>
+
+<p>If you really have to use <code>DEFER</code> and <code>IS</code>, you can include <code>lib/include/defer.f</code>.</p>
+
+<p>The deferred xt cell can be placed in thread USER-space with <code>USER-VECT ( "word" -- )</code>.
+Note, the deferred word created with <code>USER-VECT</code> will be initialized with zero, as all
+other <a href="#task">USER</a> allocated values (<code>USER</code>, <code>USER-VALUE</code>). Zero is not a valid xt and it will
+trigger an exception at runtime if executed. So it is solely your responsibility to initialize
+deferred word (for example using <a href="#scatcoln">AT-THREAD-STARTING</a>).</p>
+
+<hr />
+
+<p><a id="cls"/></p>
+
+<h3><a href="#cls">How to clear the stack with one word?</a></h3>
+
+<p>Write <code>lalala</code>. Or <code>bububu</code>. Error will occur and the stack will be cleared. In fact,
+the stack is emptied with <code>ABORT</code>, which is called when the interpreter cant
+find the word. And the proper way to clear stack is: <code>S0 @ SP!</code></p>
+
+<hr />
+
+<p><a id="comments"/></p>
+
+<h3><a href="#comments">Comments</a></h3>
+
+<p>Comments to the end of line are <code>\</code>. There are also bracket-comments, which
+are multiline. So:</p>
+
+<pre><code>\ comment till the eol
+( comment
+and here too )
+</code></pre>
+
+<p>The word <code>\EOF</code> comments out everything till the end of file. It is useful to
+separate the library code from testing or examples of usage at the end of the same
+file.</p>
+
+<pre><code>word1 word2
+\EOF
+comment till eof
+</code></pre>
+
+<p>Additionally <code>SPF/Linux</code> understands <a href="http://en.wikipedia.org/wiki/Shebang_(Unix)"><code>#!</code></a> comment. Make your forth source file executable
+and put the following line at the top</p>
+
+<pre><code>#! absolute_path_to_spf_binary
+</code></pre>
+
+<p>and you will be able to execute this file without specifying spf path at the command line.
+Shell interpeter will run spf and pass the location of source file as command-line parameter.
+SPF interpreter itself will treat the first line as a comment.</p>
+
+<hr />
+
+<p><a id="string"/></p>
+
+<h3><a href="#string">Strings</a></h3>
+
+<p>Mainly SPF uses strings with counter on the stack - i.e. two values <code>(addr u)</code>. 
+The string literals are defined with <code>S"</code>, which performs slightly different
+depending on the current state:</p>
+
+<ul>
+<li><p>During interpretation state the string is located in the input parse buffer (<code>TIB</code>), 
+and so, it is valid only in this line of input.</p></li>
+<li><p>During compilation state the string is compiled directly into the word code area.</p></li>
+</ul>
+
+<p><strong>NB</strong>: In order to simplify interaction with Windows API the additional zero byte is
+compiled directly after the symbols of the string (it is not represented in counter).</p>
+
+<p><code>S"</code> defines a so called static string, which is located in the buffer, or in the
+code area. If you need dynamic string, the one that uses memory on the heap, 
+use <code>~ac/lib/str5.f</code>. Example of usage:</p>
+
+<pre><code>REQUIRE STR@ ~ac/lib/str5.f
+"" VALUE r \ create an empty string
+" SP-Forth " VALUE m
+" - the best!" VALUE w
+m r S+  w r S+
+r STYPE
+&gt; SP-Forth - the best!
+</code></pre>
+
+<p>Additionally to such handy concatenation, library provides substitution:</p>
+
+<pre><code>" 2+2={2 2 +}" STYPE
+&gt; 2+2=4
+</code></pre>
+
+<p>Read full description and more examples in the library itself.</p>
+
+<p>Note, SPF kernel adopts the following naming convention for word prefix <code>S-</code> 
+and suffix <code>-ED</code>.</p>
+
+<p><code>S-</code> means that the word takes two values denoting a string from the stack (e.g. 
+we have <code>SFIND</code> and standard <code>FIND</code>, <code>SLITERAL</code> and <code>LITERAL</code>, and so on).</p>
+
+<p><code>-ED</code> in the words <code>CREATED</code>, <code>INCLUDED</code>, <code>REQUIRED</code>, <code>ALIGNED</code> means that the
+arguments are taken from the stack, contrary to the original words taking
+arguments from the input stream (or global variable as in <code>ALIGN</code> and <code>ALIGNED</code>). 
+Consider equivalent examples <code>CREATE some</code> and <code>S" some" CREATED</code>.</p>
+
+<hr />
+
+<p><a id="task"/></p>
+
+<h3><a href="#task">Multitasking</a></h3>
+
+<p>Threads are created with <code>TASK: ( xt "name" -- )</code> and started with
+<code>START ( u task -- tid )</code>, 
+<code>xt</code> is an executable token to get control at the thread start with one
+parameter on the stack - <code>u</code>. The returned value <code>tid</code> can be used to stop the
+thread from outside with <code>STOP ( tid -- )</code>. <code>SUSPEND ( tid -- )</code> and
+<code>RESUME ( tid -- )</code> will pause the requested thread, and resume its execution 
+(this words should be executed from the context of another thread than the one 
+being paused or resumed)</p>
+
+<p><code>PAUSE ( ms -- )</code> will pause the current thread for the given time (in milliseconds).</p>
+
+<pre><code>REQUIRE { lib/ext/locals.f
+
+:NONAME { u \ -- }
+   BEGIN
+   u .
+   u 10 * 100 + PAUSE
+  AGAIN
+; TASK: thread
+
+: go
+  10 0 DO I thread START LOOP
+  2000 PAUSE
+  ( tid1 tid2 ... tid10 )
+  10 0 DO STOP LOOP
+;
+
+go
+</code></pre>
+
+<p>Variables defined with <code>VARIABLE</code>, <code>VALUE</code> etc will share their values among
+all threads. If you need a thread-local variable - define it with 
+<code>USER ("name" -- )</code> or <code>USER-VALUE ( "name" -- )</code>. 
+USER-variables are zero-initialized at thread start.</p>
+
+<hr />
+
+<p><a id="voc"/></p>
+
+<h3><a href="#voc">Vocabularies</a></h3>
+
+<p>One creates vocabularies with standard word <code>VOCABULARY ( "name" -- )</code> 
+or <code>WORDLIST ( -- wid )</code>. 
+To be precise, <code>WORDLIST</code> is a more general object - just a list of words.
+The word <code>TEMP-WORDLIST ( -- wid )</code> will create a temporary wordlist, which
+must be freed with <code>FREE-WORDLIST</code>. The contents of the temporary wordlist
+won't be present in the SAVEd image.
+The word <code>{{ ( "name" -- )</code> will set <code>name</code> as a context vocabulary, and <code>}}</code>
+will fall back. Consider:</p>
+
+<pre><code>MODULE: my
+: + * ;
+;MODULE
+{{ my 2 3 + . }}
+</code></pre>
+
+<p>will print 6, not 5.</p>
+
+<hr />
+
+<p><a id="locals"/></p>
+
+<h3><a href="#locals">Local and temporary variables</a></h3>
+
+<p>Not available in the kernel, but included.</p>
+
+<pre><code>REQUIRE { lib/ext/locals.f
+
+\ sample usage
+: test { a b | c d }  \ a b get their values from the stack, c and d are zeroes
+  a TO c
+  b TO d
+  c . d . ;
+1 2 test
+&gt;1 2
+&gt; Ok
+</code></pre>
+
+<p>See full description and more examples in the library <code>lib/ext/locals.f</code>.</p>
+
+<p><code>lib/ext/locals.f</code> introduces syntax incompatible with ANS-94. ANS-compatible
+local variables are implemented in <code>~af/lib/locals-ans.f</code>:</p>
+
+<pre><code>REQUIRE LOCALS| ~af/lib/locals-ans.f
+
+: plus  LOCALS| a b |
+a b + TO a
+a b * ;
+2 3 plus .
+&gt;10
+&gt; Ok
+</code></pre>
+
+<hr />
+
+<p><a id="save"/></p>
+
+<h3><a href="#save">Producing executable modules</a></h3>
+
+<p><code>SAVE ( a u -- )</code> will save the whole system, including all the wordlists
+(except temporary ones!) to the executable file, with the path specified
+as <code>a u</code>. Entry point is set with VALUE <code>&lt;MAIN&gt;</code> for the console mode and
+VARIABLE <code>MAINX</code>  for GUI. The mode itself is defined with either <code>?CONSOLE</code>
+or <code>?GUI</code>. <code>SPF-INIT?</code> controls interpretation of the command-line and
+spf4.ini auto-including:</p>
+
+<pre><code>0 TO SPF-INIT?
+' ANSI&gt;OEM TO ANSI&gt;&lt;OEM
+TRUE TO ?GUI
+' NOOP TO &lt;MAIN&gt;
+' run MAINX !
+S" gui.exe" SAVE  
+</code></pre>
+
+<p>or</p>
+
+<pre><code>' run TO &lt;MAIN&gt;
+S" console.exe" SAVE
+</code></pre>
+
+<hr />
+
+<p><a id="dll"/></p>
+
+<h3><a href="#dll">Using external DLLs</a></h3>
+
+<p><em>FIXME:</em> rewrite, more examples</p>
+
+<p>Import functions with stdcall calling convention (e.g. Win32 API) as follows :</p>
+
+<pre><code>WINAPI: SevenZip 7-zip32.dll
+</code></pre>
+
+<p>Functions with cdecl calling convention (e.g. from msvcrt.dll) or with
+variable number of arguments :</p>
+
+<pre><code>REQUIRE CAPI: ~af/lib/c/capi.f
+2 CAPI: strstr msvcrt.dll
+</code></pre>
+
+<p>If you want to import automatically all DLL functions as forth words,
+use (for stdcall) : </p>
+
+<pre><code>REQUIRE UseDLL ~nn/lib/usedll.f
+UseDLL "DLL name"
+</code></pre>
+
+<p>or:</p>
+
+<pre><code>REQUIRE DLL ~ac/lib/ns/dll-xt.f
+DLL NEW: "DLL name" 
+</code></pre>
+
+<p>For cdecl :</p>
+
+<pre><code>REQUIRE USES_C ~af/lib/c/capi-func.f
+USES_C "DLL name"
+</code></pre>
+
+<p>or:</p>
+
+<pre><code>REQUIRE SO ~ac/lib/ns/so-xt.f
+SO NEW: "DLL name"
+</code></pre>
+
+<p><strong>SPF/linux</strong></p>
+
+<p>Low-level words <code>DLOPEN</code> <code>DLSYM</code> <code>symbol-addr</code> <code>symbol-call</code></p>
+
+<p>Usage. By default <code>libc</code> <code>libdl</code> and <code>libpthread</code> are loaded. Load other shared objects with:</p>
+
+<pre><code>USE so-file-name
+</code></pre>
+
+<p>Invoking dynamic function</p>
+
+<pre><code>(( H-STDOUT S" hello world!" )) write DROP
+</code></pre>
+
+<p>Nota bene, parameters are passed from left to right, <code>DROP</code> removes return value after the call.
+If there are some parameters on the stack already:</p>
+
+<pre><code>H-STDOUT 1 &lt;( S" hello world!" )) write DROP
+</code></pre>
+
+<p>i.e. the number before <code>&lt;(</code> shows how much parameters are already on the stack ("out of brackets").</p>
+
+<p>Core implementation of <code>(( ))</code> doesn't allow nested invocations. Use <code>~ygrek/lib/linux/ffi.f</code> to
+overcome this limitation.</p>
+
+<p><code>~ac/lib/ns/so-xt.f</code> works in <code>spf/linux</code> (identically to Windows version!).</p>
+
+<hr />
+
+<p><a id="debug"/></p>
+
+<h3><a href="#debug">Debugging facilities</a></h3>
+
+<p><code>STARTLOG</code> starts logging all console output (<code>TYPE</code>, <code>.</code>, etc) 
+to the <code>spf.log</code> file in the current directory. <code>ENDLOG</code>, respectively, 
+stops such behaviour.</p>
+
+<p><a href="devel.en.html#debug">More in devel</a></p>
+
+<hr />
+
+<p><a id="opt"/></p>
+
+<h3><a href="#opt">Optimizer</a></h3>
+
+<p>SPF uses the subroutine threaded code, i.e. the compiled code looks like the
+chains of <code>CALL &lt;word-cfa-address&gt;</code>. This code can be ran directly, but by
+default it is processed with the optimizer to gain a speedup at runtime. It
+performs inlining and peephole-optimization. More on ForthWiki (in russian):
+"<a href="http://wiki.forth.org.ru/optimizer">Optimizing compiler</a>".</p>
+
+<p><strong>Tuning optimizer</strong> <em>(default values are ok in the vast majority of cases, most
+probably you dont need these options!)</em></p>
+
+<ul>
+<li><code>DIS-OPT</code> disables macrooptimization</li>
+<li><code>SET-OPT</code> enables macrooptimization (it is on by default)</li>
+<li><code>0 TO MM_SIZE</code> disables inlining (remember that inlining of <code>DO</code> <code>LOOP</code> and
+some other words is performed by the spf kernel itself and thus is not affected with this option)  </li>
+<li><code>TRUE TO ?C-JMP</code> enables recursion tail-call optimization (experimental,
+disabled by default, may not work in some cases)</li>
+<li><code>FALSE TO VECT-INLINE?</code> disables direct compilation of vector calls</li>
+</ul>
+
+<p><strong>NB</strong>: If your program starts behaving in a strange way, try to
+temporarily turn off the optimizer using <code>DIS-OPT</code>, probably (very unlikely!) you
+have encountered a bug in optimizer. If so - locate the piece of code where the
+bug occurs and file a bugreport please.</p>
+
+<p>You can examine results of the word compilation as a native code with 
+disassembler:</p>
+
+<pre><code>REQUIRE SEE lib/ext/disasm.f
+SEE word-in-interest
+</code></pre>
+
+<p>or get the line-by-line listing (forth code with the corresponding asm code)</p>
+
+<pre><code>REQUIRE INCLUDED_L ~mak/listing2.f
+S" file, with the code in interest"  INCLUDED_L
+\ the listing will be placed in the file near to the file included
+</code></pre>
+
+<p><strong>Optimization effect: conditionals</strong></p>
+
+<p>Consider the following usual piece of code <code>10 &gt; IF ... THEN</code> -- push literal on the stack, compare two
+top stack elements, store the result back on the stack and then conditionally jump using the top of the stack as a
+flag. Optimizer will turn this into just the pair of machine commands:</p>
+
+<pre><code>lib/ext/disasm.f
+:NONAME DUP 10 &gt; IF 1 . THEN ; REST
+</code></pre>
+
+<p>Result:</p>
+
+<pre><code>cmp eax, # A
+jle @@1
+...
+@@1:
+</code></pre>
+
+<p>The same applies for other typical code sequences : <code>2DUP = IF ... THEN</code> and similar:</p>
+
+<pre><code>lib/ext/disasm.f
+:NONAME 2DUP = IF 1 . THEN ; REST
+</code></pre>
+
+<p>Result:</p>
+
+<pre><code>cmp eax, 0 [ebp]
+jne @@1
+...
+@@1:
+</code></pre>
+
+<p>Logical operations are also optimized (<code>0=</code> is used as logical negation here, thus 
+<code>0&lt; 0=</code> means "more or equal to zero"):</p>
+
+<pre><code>lib/ext/disasm.f
+:NONAME DUP 0&lt; 0= IF 1 . THEN ; REST
+</code></pre>
+
+<p>Result:</p>
+
+<pre><code>or eax, eax
+jl @@1
+...
+@@1:
+</code></pre>
+
+<p><strong>Optimization effect: words created with <code>CREATE</code>, <code>VARIABLE</code>, <code>VALUE</code>, <code>USER</code></strong></p>
+
+<p>When compiling variables or constants, instead of simply calling a DOES-action of the
+word being compiled, the specialized procedure (which knows the internal representation of such
+words) inlines the corresponding code. E.g.:</p>
+
+<pre><code>lib/ext/disasm.f
+10 CONSTANT c
+:NONAME c ; REST
+
+10 VALUE vl
+:NONAME vl ; REST
+
+VARIABLE vr
+:NONAME vr @ ; REST
+</code></pre>
+
+<p>Result:</p>
+
+<pre><code>mov     -4 [ebp] , eax
+mov     eax , # A
+lea     ebp , -4 [ebp}
+ret
+
+mov     -4 [ebp] , eax
+mov     eax , 572410  ( vl+5  )
+lea     ebp , -4 [ebp]
+ret
+
+mov     -4 [ebp] , eax
+mov     eax , 57243C  ( vr+5  )
+lea     ebp , -4 [ebp]
+ret
+</code></pre>
+
+<hr />
+
+<p><a id="ans"/></p>
+
+<h3><a href="#ans">ANS support</a></h3>
+
+<p>Maximum ANS conformity is achieved by including <code>lib/include/ansi.f</code>.
+Additional words are defined, some of them dummies, etc. </p>
+
+<p>Also, a non-standard optimization of FILE wordset is fixed - <code>OPEN-FILE</code>,
+<code>CREATE-FILE</code> and other implicitly treat the input string as zero-ended (ignoring the
+length parameter). <code>lib/include/ansi-file.f</code> will add an extra zero byte in
+such case, after copying the file name to the dynamic buffer, which remains
+allocated for future use. You don't really need such behaviour when
+defining file names with string literal <code>S"</code> or string libraries
+<code>~ac/lib/str*.f</code>, as they ensure there is an extra zero byte. Though it can be
+helpful for using non-SPF libraries.</p>
+
+<hr />
+
+<p><a id="callback"/></p>
+
+<h3><a href="#callback">Callbacks</a></h3>
+
+<p><code>CALLBACK: ( "name" xt bytes -- )</code> takes the <code>xt</code> of word to decorate as a callback
+and the number of <strong>bytes</strong> which will be used for the stack parameters during invocation.
+You solely own the responsibility for matching calling conventions (cdecl,stdcall).
+Cdecl calling convention (default for C/C++) assumes that you leave all input parameters intact
+(e.g. duplicate before using). Stdcall expects <code>xt</code> to eat all paramaters from the stack. Also, bear
+in mind that callback should always return one additional CELL -- result value, even if the code
+calling this callback declares it as void (it is the feature of <code>CALLBACK:</code>).
+Example :</p>
+
+<p>Callback is declared as follows (C++) :</p>
+
+<pre><code>typedef void (*TestCallback)(char*,int);
+</code></pre>
+
+<p>Forth code defines callback</p>
+
+<pre><code>:NONAME ( n str -- )
+  2DUP \ duplicate all params (cause cdecl)
+  ASCIIZ&gt; CR TYPE \ string
+  CR . \ number
+  0 \ return value
+; 2 CELLS \ 2 parameters - 8 bytes
+CALLBACK: Test \ new word Test is a callback
+</code></pre>
+
+<hr />
+
+<p><a id="notfound"/></p>
+
+<h3><a href="#notfound">NOTFOUND</a></h3>
+
+<p>This word is called from the context vocabulary during the interpretation
+cycle when the word being parsed cannot be found. <code>NOTFOUND ( a u -- )</code> should
+throw an exception if it cant process the passed word. Else INTERPRET
+considers the word valid and continues parsing. Default <code>NOTFOUND</code>
+recognizes numbers and provides access to the <a href="#doublecolon">nested vocabularies</a>.</p>
+
+<p>A good form to redefine <code>NOTFOUND</code> is to call its old xt first, and proceed
+with your own code only if previous one fails with exception. Example:</p>
+
+<pre><code>: MY? ( a u -- ? ) S" !!" SEARCH &gt;R 2DROP R&gt; ;
+: DO-MY ( a u -- ) ." My NOTFOUND: " TYPE CR ;
+
+: NOTFOUND ( a u -- )
+  2DUP 2&gt;R ['] NOTFOUND CATCH 
+  IF
+    2DROP
+    2R@ MY? IF 2R@ DO-MY ELSE -2003 THROW THEN
+  THEN
+  RDROP RDROP
+;
+</code></pre>
+
+<p>Or:</p>
+
+<pre><code>: NOTFOUND ( a u -- )
+  2DUP MY? IF DO-MY EXIT THEN
+  ( a u )
+  NOTFOUND
+;
+</code></pre>
+
+<p><code>~pinka/samples/2006/core/trans/nf-ext.f</code> simplifies adding custom xt to the <code>NOTFOUND</code> chain.</p>
+
+<hr />
+
+<p><a id="scatcoln"/></p>
+
+<h3><a href="#scatcoln">Scattered colons</a></h3>
+
+<p>Read the full description of this technique: "<a href="http://www.forth.org.ru/~mlg/ScatColn/ScatteredColonDef.html">Scattering a Colon
+Definition</a>" in English. Briefly: new actions can be added to the
+word after its compilation. The word <code>...</code> prepares space for the future
+extending, <code>..:</code> and <code>;..</code> link the code as an extension.</p>
+
+<pre><code>: INIT ... orig ; 
+\ INIT called here will execute orig
+..: INIT extend1 ;.. 
+\ here - extend1 and orig will be executed sequentially
+..: INIT extend2 ;.. 
+\ equal to : INIT extend1 extend2 orig ;
+\ and so forth
+</code></pre>
+
+<p>You can achieve the same effect with vectors, but this way looks better.</p>
+
+<p>SPF uses scattered colons to define <code>AT-THREAD-STARTING</code> and
+<code>AT-PROCESS-STARTING</code>, which are called when the process and the thread are
+started, respectively. For example, <code>lib/include/float2.f</code> adds initialization
+of the inner variables in <code>AT-THREAD-STARTING</code>.</p>
+
+<hr />
+
+<p><a id="doublecolon"/></p>
+
+<h3><a href="#doublecolon">Search scope</a></h3>
+
+<p>As expected the search scope is generally controlled by <code>CONTEXT</code>, but sometimes there is a
+need to explicitely specify vocabulary for searching particular word. In such cases special
+syntax <code>Wordlist::word</code> is used. Example:</p>
+
+<pre><code>MODULE: someWords
+: TYPE 2DROP ;
+;MODULE
+
+ALSO someWords \ adding someWords vocabulary to context
+S" foo" TYPE \ nothing happens - TYPE from someWords was used
+S" bar" FORTH::TYPE \ explicit usage of "ordinary" TYPE from the main vocabulary
+</code></pre>
+
+<p>When performing actions on words via <code>'</code> (get xt by name), <code>POSTPONE</code>
+(compile), <code>TO</code> (secondary word action) the search scope is defined as follows:</p>
+
+<pre><code>Wordlist::' word
+Wordlist::POSTPONE word
+etc 
+</code></pre>
+
+<p>because such words do parse the input stream on their own and <code>word</code> is not handled by <code>INTERPRET</code> 
+and corresponding <code>NOTFOUND</code>.</p>
+
+<hr />
+
+<p><a id="catch"/></p>
+
+<h3><a href="#catch">Exceptions</a></h3>
+
+<p>Exceptions handling in SPF is performed according to ANS-94 with <code>THROW</code> and <code>CATCH</code>.</p>
+
+<p><code>THROW ( n -- )</code> raises an exception with numeric code <code>n</code> (except <code>n</code> is zero), 
+i.e. execution of the current and all parent words is aborted until the exception is caught.</p>
+
+<p><code>CATCH ( i*x xt -- i*x n | 0 )</code> executes <code>xt</code> and catches all exceptions raised within <code>xt</code>. 
+Result is zero in case there were no exceptions, else exception code is returned (that same <code>n</code> 
+that was passed as argument to <code>THROW</code> which raised this exception, or the system error code)
+and stack depth is set equal to the one before <code>xt</code> was executed (but the data on the stack may be
+corrupted if <code>xt</code> was writing stack at this depth).</p>
+
+<p>All exceptions can be divided in two groups - system (memory access vioaltion, division by zero, etc)
+and native (<code>THROW</code> word with non-zero argument). All exceptions are caught identically, but 
+system ones do print additional exception report.</p>
+
+<p>Many words return <code>ior</code> (input/output result code), e.g. file operations (<code>CREATE-FILE</code>, 
+<code>OPEN-FILE</code>, <code>READ-FILE</code>, <code>WRITE-FILE</code>, <code>CLOSE-FILE</code> etc) and memory operations (<code>ALLOCATE</code>, 
+<code>FREE</code>, <code>RESIZE</code>). This <code>ior</code> is equal to error code (in case there was one) and can be <code>THROW</code>n directly.</p>
+
+<pre><code>: file S" rewdsadwerdfstrg" R/O OPEN-FILE THROW ; \ try to open non-existing file
+: divide 
+    ['] / CATCH  \ catch exception from division
+    IF ." Dont divide by " . DROP  \ there was an exception - two numbers on the stack
+    ELSE ." Result : " . \ result of successful division
+    THEN CR ; 
+: test 
+   10 2 divide \ everything ok
+   1 0 divide  \ system exception - SPF report and our message from the divide word
+   ['] file CATCH IF ." Caught exception" CR THEN \ catch native exception
+   \ there is no need to always throw ior, it can be analyzed in place
+   S" dsderewfdstrtr" R/O OPEN-FILE IF ." bad file" ELSE ." Good file" THEN CR ;
+test
+</code></pre>
+
+<p>All error codes, passed to <code>THROW</code> and left on stack after <code>CATCH</code>,
+are interpreted according to <code>spf.err</code> file, from the <code>lib</code> directory. Text messages printed
+in report are taken from this file.</p>
+
+<hr />
+</td></tr></table></div></BODY></HTML>

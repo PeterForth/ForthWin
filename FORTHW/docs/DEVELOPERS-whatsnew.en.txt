@@ -1,0 +1,16 @@
+ 
+Developers:
+
+~ruvim   = Ruvim Pinka          ruvim@forth.org.ru
+~boa     = Bordachev Andrej     glareboa@mail.ru
+~day     = Dmitry Yakimov       ftech@tula.net
+~micro   = Dmitry Zyryanov      micro@forth.org.ru
+~1001    = Konstantin Tarasov   const@penza.com.ru
+~ac      = Andrey Cherezov      andrey@cherezov.koenig.su
+~nemnick = Nicholas Nemtsev     nn@vdk.psc.ru
+~mak     = Michael Maximov      mak@mail.rtc.neva.ru
+~yz      = Yuriy Zhilovets      yz@forth.org.ru
+~mlg     = Michael Gassanenko   mlg@forth.org
+~af      = Andrey Filatkin      af@forth.org.ru
+~oleg_sh = Oleg Shalyopa
+~trasher = Dmitry Bobrik

@@ -1,0 +1,328 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>SP-Forth: дополнительные библиотеки</title>
+<style type="text/css">
+            body {background:white;}
+            * {font-family: arial, verdana, sans-serif}
+            code {font-family: 'Lucida Console', 'Courier New', monospace}
+            pre, code { background : #EEEEF4}
+            img.icon { vertical-align:bottom; margin-left:0.5em; margin-right:0.2em; border:0; }
+            h3::before {content:'( '}
+            h3::after {content:' )'}
+        </style>
+</head>
+<body><div align="center"><table width="800"><tr><td align="left">
+<h1>
+<a href="readme.ru.html">SP-Forth</a>: Дополнительные библиотеки</h1>
+<p><small>$Date: 2009/01/20 20:45:35 $</small></p>
+<p><em>REQUIRE это слово подключающее либу, всё лишнее закомментировано, так что можно использовать этот список как форт код при подключении либ :)</em></p>
+<hr>
+<p>[<a href="devel.en.html">English</a>] [<a href="devel.ru.html">Русский</a>]</p>
+<hr>
+<p>[<a href="#net">Сеть</a>] [<a href="#graphics">Графика</a>] [<a href="#arc">Архивы</a>] [<a href="#list">Связные списки</a>] [<a href="#record">Структуры</a>] [<a href="#data">Структуры данных</a>] [<a href="#sort-n-search">Сортировка и поиск</a>] [<a href="#techniques">Programming techniques</a>] [<a href="#debug">Отладка</a>] [<a href="#math">Вычисления</a>] [<a href="#random">Случайные числа</a>] [<a href="#hash">Хэш-таблицы</a>] [<a href="#hash-func">Хэши</a>] [<a href="#compiletime-const">Константы времени компиляции</a>] [<a href="#ui">Интерфейс пользователя</a>] [<a href="#WinCOM">Windows COM</a>] [<a href="#services">Системные сервисы</a>] [<a href="#datetime">Дата и время</a>] [<a href="#db">Базы данных</a>] [<a href="#threads">Процессы, потоки, итп</a>] [<a href="#ini-registry">Реестр Windows</a>] [<a href="#str">Строки</a>] [<a href="#files">Файлы</a>] [<a href="#xml">XML</a>] [<a href="#oop">ООП расширения</a>] [<a href="#vocs">Словари</a>] [<a href="#mem">Память</a>] [<a href="#misc">Разное</a>] [<a href="#encoding">Кодировки</a>] </p>
+<hr>
+<a id="net"></a><h3>Сеть</h3>
+<ul>
+<li>REQUIRE CreateSocket <a href="../devel/~ac/lib/win/winsock/SOCKETS.F">~ac/lib/win/winsock/SOCKETS.F</a> \ базовая поддержка TCP/IP</li>
+<li>REQUIRE SslInit <a href="../devel/~ac/lib/win/winsock/ssl.f">~ac/lib/win/winsock/ssl.f</a> \ базовая поддержка SSL/TLS</li>
+<li>REQUIRE SslClientSocket <a href="../devel/~ac/lib/win/winsock/sockets_ssl.f">~ac/lib/win/winsock/sockets_ssl.f</a> \ SSL/TLS сервер</li>
+<li>REQUIRE SocketLine <a href="../devel/~ac/lib/win/winsock/socketline2.f">~ac/lib/win/winsock/socketline2.f</a> \ построчное буферизированное чтение из сокета</li>
+<li>REQUIRE ReadFrom <a href="../devel/~ac/lib/win/winsock/SOCKNAME.F">~ac/lib/win/winsock/SOCKNAME.F</a> \ поддержка UDP</li>
+<li>REQUIRE fsockopen <a href="../devel/~ac/lib/win/winsock/PSOCKET.F">~ac/lib/win/winsock/PSOCKET.F</a> \ упрощённый интерфейс к сокетам</li>
+<li>REQUIRE ForEachIP <a href="../devel/~ac/lib/win/winsock/foreach_ip.f">~ac/lib/win/winsock/foreach_ip.f</a> \ выполнение заданных действия для каждого IP хоста</li>
+<li>REQUIRE SendDnsQuery <a href="../devel/~ac/lib/win/winsock/dns_q.f">~ac/lib/win/winsock/dns_q.f</a> \ DNS запросы</li>
+<li>REQUIRE PutFileTr <a href="../devel/~ac/lib/win/winsock/transmit.f">~ac/lib/win/winsock/transmit.f</a> \ высокоскоростная передача файлов в Windows</li>
+<li>REQUIRE SnmpInit <a href="../devel/~ac/lib/win/snmp/snmp.f">~ac/lib/win/snmp/snmp.f</a> \ поддержка SNMP</li>
+<li>REQUIRE GET-FILE-VIAPROXY <a href="../devel/~ac/lib/lin/curl/curl.f">~ac/lib/lin/curl/curl.f</a> \ cURL обёртка - получение/передача файлов по HTTP/FTP/etc
+ <a href="http://curl.haxx.se/latest.cgi?curl=win32-devel-ssl"><img src="images/wrap.png" class="icon">libcurl.dll</a>
+</li>
+<li>REQUIRE WEB-SERVER <a href="../devel/~nn/lib/web/server.f">~nn/lib/web/server.f</a> \ простой сервер HTTP</li>
+<li>\ <a href="../devel/~nn/lib/net">~nn/lib/net</a> \ HTTP, POP3, FTP, etc</li>
+</ul>
+<a id="graphics"></a><h3>Графика</h3>
+<ul>
+<li>REQUIRE GLWindow <a href="../devel/~ygrek/lib/joopengl/GLWindow.f">~ygrek/lib/joopengl/GLWindow.f</a> \ OpenGL поверх joop</li>
+<li>REQUIRE CGLWindow <a href="../devel/~ygrek/lib/wfl/opengl/GLWindow.f">~ygrek/lib/wfl/opengl/GLWindow.f</a> \ OpenGL поверх WFL/hype3</li>
+<li>REQUIRE START-DRAW <a href="../devel/~profit/misc/basicdraw.f">~profit/misc/basicdraw.f</a> \ Небольшая обёртка для простой интерактивной графики</li>
+</ul>
+<a id="arc"></a><h3>Архивы</h3>
+<ul>
+<li>REQUIRE gzip_write <a href="../devel/~ac/lib/win/arc/gzip/zlib.f">~ac/lib/win/arc/gzip/zlib.f</a> \ упаковка и распаковка gzip-потоков
+ <a href="http://www.forth.org.ru/ext/zlib.dll"><img src="images/wrap.png" class="icon">zlib.dll (1.1.4)</a>
+ 
+</li>
+<li>REQUIRE 
+ zip-pack 
+ <a href="../devel/~profit/lib/7zip-dll.f">~profit/lib/7zip-dll.f</a>
+  \ упаковка и распаковка архивов zip/7zip
+ <a href="http://www.csdinc.co.jp/archiver/lib/7-zip32.html#download"><img src="images/wrap.png" class="icon">7-zip32.dll</a>
+</li>
+<li>REQUIRE zlib_compress <a href="../devel/~ac/lib/lin/zlib/zlib.f">~ac/lib/lin/zlib/zlib.f</a> \ обёртка для zlib
+ <a href="http://www.zlib.net"><img src="images/wrap.png" class="icon">zlib1.dll libz.so.1</a>
+</li>
+</ul>
+<a id="list"></a><h3>Связные списки</h3>
+<ul>
+<li>REQUIRE ListNode <a href="../devel/~day/joop/lib/list.f">~day/joop/lib/list.f</a> \ двухсвязный список</li>
+<li>REQUIRE AddNode <a href="../devel/~ac/lib/list/STR_LIST.F">~ac/lib/list/STR_LIST.F</a> \ односвязный список</li>
+<li>REQUIRE LINK, <a href="../devel/~day/common/link.f">~day/common/link.f</a> \ статический список (компилируется в кодофай)</li>
+<li>REQUIRE firstNode <a href="../devel/~day/lib/staticlist.f">~day/lib/staticlist.f</a> \ двухсвязный список, много слов</li>
+<li>REQUIRE list+s <a href="../devel/~pinka/lib/list_ext.f">~pinka/lib/list_ext.f</a> \ односвязный список</li>
+<li>REQUIRE cons <a href="../devel/~ygrek/lib/list/core.f">~ygrek/lib/list/core.f</a> \ cons список, базовые слова</li>
+<li>REQUIRE lst( <a href="../devel/~ygrek/lib/list/ext.f">~ygrek/lib/list/ext.f</a> \ создание списков в виде %[ 1 % 2 % 3 % ]%</li>
+<li>REQUIRE reduce-this <a href="../devel/~ygrek/lib/list/more.f">~ygrek/lib/list/more.f</a> \ дополнительный операции над списком</li>
+<li>REQUIRE write-list <a href="../devel/~ygrek/lib/list/write.f">~ygrek/lib/list/write.f</a> \ распечатка, сериализация пригодная для EVALUATE</li>
+<li>REQUIRE write-list <a href="../devel/~ygrek/lib/list/all.f">~ygrek/lib/list/all.f</a> \ все слова для cons списков</li>
+</ul>
+<a id="record"></a><h3>Структуры</h3>
+<ul>
+<li>REQUIRE STRUCT: <a href="../lib/ext/struct.f">lib/ext/struct.f</a> \ простые структуры</li>
+<li>REQUIRE f: <a href="../devel/~af/lib/struct.f">~af/lib/struct.f</a> \ структуры с элементами-функцями</li>
+<li>REQUIRE f: <a href="../devel/~af/lib/struct-t.f">~af/lib/struct-t.f</a> \ структуры с элементами функциями во временном словаре</li>
+</ul>
+<a id="data"></a><h3>Структуры данных</h3>
+<ul>
+<li>REQUIRE Stack <a href="../devel/~day/joop/lib/stack.f">~day/joop/lib/stack.f</a> \ стек</li>
+<li>REQUIRE New-Queue <a href="../devel/~pinka/lib/queue_pr.f">~pinka/lib/queue_pr.f</a> \ очередь с приоритетом</li>
+<li>REQUIRE x.mask <a href="../devel/~mlg/SrcLib/bitfield.f">~mlg/SrcLib/bitfield.f</a> \ битовый массив</li>
+<li>REQUIRE new-set <a href="../devel/~pinka/lib/charset.f">~pinka/lib/charset.f</a> \ множество ASCII (как 256-битный массив)</li>
+</ul>
+<a id="sort-n-search"></a><h3>Сортировка и поиск</h3>
+<ul>
+<li>REQUIRE HeapSort <a href="../devel/~mlg/SrcLib/hsort.f">~mlg/SrcLib/hsort.f</a> \ пирамидальная сортировка</li>
+<li>REQUIRE quick_sort <a href="../devel/~pinka/samples/2003/common/QSORT.F">~pinka/samples/2003/common/QSORT.F</a> \ "быстрая" сортировка</li>
+<li>REQUIRE binary-search <a href="../devel/~profit/lib/binary-search.f">~profit/lib/binary-search.f</a> \ двоичный поиск</li>
+</ul>
+<a id="techniques"></a><h3>Programming techniques</h3>
+<ul>
+<li>REQUIRE { <a href="../lib/ext/locals.f">lib/ext/locals.f</a> \ локальные переменные</li>
+<li>REQUIRE LAMBDA{ <a href="../devel/~pinka/lib/lambda.f">~pinka/lib/lambda.f</a> \ :NONAME в режиме компиляции</li>
+<li>REQUIRE (: <a href="../devel/~yz/lib/inline.f">~yz/lib/inline.f</a> \ аналог лямбда-конструкции</li>
+<li>REQUIRE s( <a href="../devel/~spn/se.f">~spn/se.f</a> \ S-выражения со сборщиком мусора поверх SPF<a href="../devel/~spn/forth-fp.html"><img src="images/doc.png" class="icon">документация</a>
+</li>
+<li>REQUIRE memoize: <a href="../devel/~ygrek/lib/fun/memoize.f">~ygrek/lib/fun/memoize.f</a> \ Сохранение (кэширование) промежуточных значение при вызове функции вида (CELL -&gt; CELL)<a href="../devel/~ygrek/prog/fun/memoize.f"><img src="images/example.png" class="icon">пример</a>
+</li>
+<li>REQUIRE CONT <a href="../devel/~profit/lib/bac4th.f">~profit/lib/bac4th.f</a> \ перебор с возвратами  <a href="../devel/~mlg/index.html#bacforth"><img src="images/doc.png" class="icon">~mlg/index.html#bacforth</a>
+</li>
+<li>REQUIRE axt=&gt; <a href="../devel/~profit/lib/bac4th-closures.f">~profit/lib/bac4th-closures.f</a> \ Динамически генерируемые отрезки кода (замыкания)</li>
+<li>REQUIRE AsQName <a href="../devel/~pinka/samples/2006/syntax/qname.f">~pinka/samples/2006/syntax/qname.f</a> \ Расширение синтаксиса: распознавание `строка как S" строка"</li>
+<li>REQUIRE AsQWord <a href="../devel/~pinka/spf/quoted-word.f">~pinka/spf/quoted-word.f</a> \ Расширение синтаксиса: 'c' -- код символа c, 'word -- xt слова word, `string -- строка S" string"</li>
+</ul>
+<a id="debug"></a><h3>Отладка</h3>
+<ul>
+<li>REQUIRE HeapEnum <a href="../devel/~ac/lib/memory/heap_enum2.f">~ac/lib/memory/heap_enum2.f</a> \ перечисление блоков памяти выделенных на хипе</li>
+<li>REQUIRE mem_stub <a href="../devel/~day/lib/mem_sanity.f">~day/lib/mem_sanity.f</a> \ проверка корректности удаления (с помощью заполнения шаблоном)</li>
+<li>REQUIRE MemReport <a href="../devel/~day/lib/memreport.f">~day/lib/memreport.f</a> \ отчёт об утечках памяти (поддерживает многопоточность)</li>
+<li>REQUIRE ACCERT( <a href="../lib/ext/debug/accert.f">lib/ext/debug/accert.f</a> \ условная компиляция</li>
+<li>REQUIRE TRACER <a href="../lib/ext/debug/tracer.f">lib/ext/debug/tracer.f</a> \ подробный отчёт о выполнении</li>
+<li>REQUIRE .elapsed <a href="../devel/~af/lib/elapse.f">~af/lib/elapse.f</a> \ замеры времени выполнения слова</li>
+<li>REQUIRE .AllStatistic <a href="../devel/~pinka/lib/tools/profiler.f">~pinka/lib/tools/profiler.f</a> \ профилирование слов (выводит статистику о временах работы)</li>
+<li>REQUIRE TESTCASES <a href="../devel/~ygrek/lib/testcase.f">~ygrek/lib/testcase.f</a> \ TESTCASES by ~day</li>
+<li>REQUIRE /TEST <a href="../devel/~profit/lib/testing.f">~profit/lib/testing.f</a> \ отметка тестов в коде</li>
+</ul>
+<a id="math"></a><h3>Вычисления</h3>
+<ul>
+<li>REQUIRE F. <a href="../lib/include/float2.f">lib/include/float2.f</a> \ числа с плавающей точкой</li>
+<li>REQUIRE FR* <a href="../devel/~nn/lib/fraction.f">~nn/lib/fraction.f</a> \ работа с дробями (в виде чисел вида: "1/3")</li>
+<li>REQUIRE RATIO <a href="../devel/~pinka/lib/BigMath.f">~pinka/lib/BigMath.f</a> \ рациональные дроби</li>
+<li>REQUIRE inv_normalDF <a href="../devel/~ygrek/lib/math/inv_normal.f">~ygrek/lib/math/inv_normal.f</a> \ Квантиль нормального распределения</li>
+<li>REQUIRE InvertNumber <a href="../devel/~ygrek/lib/math/gcd.f">~ygrek/lib/math/gcd.f</a> \ Наибольший общий делитель и обратное число по модулю</li>
+</ul>
+<a id="random"></a><h3>Случайные числа</h3>
+<ul>
+<li>REQUIRE RANDOM <a href="../lib/ext/rnd.f">lib/ext/rnd.f</a> \ линейно конгруэнтный генератор</li>
+<li>REQUIRE RANDOM <a href="../devel/~day/common/RND.F">~day/common/RND.F</a> \ линейно конгруэнтный генератор</li>
+<li>REQUIRE RANDOM <a href="../devel/~af/lib/random.f">~af/lib/random.f</a> \ линейно конгруэнтный генератор</li>
+<li>REQUIRE GENRAND <a href="../devel/~ygrek/lib/neilbawd/mersenne.f">~ygrek/lib/neilbawd/mersenne.f</a> \ Mersenne twister - быстрый и качественный генератор</li>
+</ul>
+<a id="hash"></a><h3>Хэш-таблицы</h3>
+<ul>
+<li>REQUIRE new-hash <a href="../devel/~pinka/lib/hash-table.f">~pinka/lib/hash-table.f</a> \ хэш таблица</li>
+<li>REQUIRE ListAllocate <a href="../devel/~af/lib/simple_hash.f">~af/lib/simple_hash.f</a> \ хэшированный массив строк</li>
+<li>REQUIRE HASH-TABLE <a href="../devel/~yz/lib/hash.f">~yz/lib/hash.f</a> \ хэш таблица</li>
+<li>\ <a href="../devel/~pinka/samples/2003/test-hash/">~pinka/samples/2003/test-hash/</a> \ сравнение скорости реализаций хэш таблиц</li>
+<li>REQUIRE HASH <a href="../devel/~day/common/hash.f">~day/common/hash.f</a> \ процедура подсчёта хэш-значения</li>
+</ul>
+<a id="hash-func"></a><h3>Хэши</h3>
+<ul>
+<li>REQUIRE MD5 <a href="../devel/~clf/MD5.F">~clf/MD5.F</a> \ MD5</li>
+<li>REQUIRE MD5 <a href="../devel/~clf/md5-ts.f">~clf/md5-ts.f</a> \ thread safe MD5</li>
+<li>REQUIRE MD5 <a href="../lib/alg/md5-jz.f">lib/alg/md5-jz.f</a> \ MD5</li>
+</ul>
+<a id="compiletime-const"></a><h3>Константы времени компиляции</h3>
+<ul>
+<li>REQUIRE LOAD-CONSTANTS <a href="../devel/~yz/lib/const.f">~yz/lib/const.f</a> \ подключение констант - поиск через префиксное слово W:</li>
+<li>REQUIRE ADD-CONST-VOC <a href="../lib/ext/const.f">lib/ext/const.f</a> \ подключение констант - поиск по NOTFOUND</li>
+<li>REQUIRE BEGIN-CONST <a href="../devel/~day/wincons/compile.f">~day/wincons/compile.f</a> \ компилятор *.const файлов</li>
+<li>\ <a href="../devel/~day/wincons/h2f.f">~day/wincons/h2f.f</a> \ выдирание констант из сишных заголовочных файлов</li>
+<li>\ <a href="../devel/~yz/cons/">~yz/cons/</a> \ файлы констант для sql, commctrl, windows</li>
+<li>\ <a href="../devel/~ygrek/lib/data/">~ygrek/lib/data/</a> \ файлы констант для libcurl, opengl, farplugin</li>
+</ul>
+<a id="ui"></a><h3>Интерфейс пользователя</h3>
+<ul>
+<li>REQUIRE 
+  WINDOWS... <a href="../devel/~yz/lib/winlib.f">~yz/lib/winlib.f</a>
+   \ WinLib - библиотека интерфейса Windows. Умеет растягивать формы и контролы в ней. Задание вида окна без указания точных координат, с помощью размещения в сетке - ноу-хау!
+  <a href="../devel/~yz/winlib.html"><img src="images/doc.png" class="icon">окна и общая функциональность</a>
+  <a href="../devel/~yz/winctl.html"><img src="images/doc.png" class="icon">элементы управления</a>
+  <a href="../devel/~yz/wincc.html"><img src="images/doc.png" class="icon">новые элементы управления</a> 
+  <a href="../devel/~yz/prog/winlib"><img src="images/example.png" class="icon">пример</a>
+</li>
+<li>REQUIRE through-control <a href="../devel/~profit/lib/winlibex.f">~profit/lib/winlibex.f</a> \ Некоторые дополнения к winlib</li>
+<li>REQUIRE FrameWindow <a href="../devel/~day/joop/win/framewindow.f">~day/joop/win/framewindow.f</a> \ библиотка интерфейса поверх joop</li>
+<li>\ <a href="../devel/~ac/lib/win/window">~ac/lib/win/window</a> \ маленькая и простая реализация</li>
+<li>REQUIRE 
+ WFL <a href="../devel/~day/wfl/wfl.f">~day/wfl/wfl.f</a>
+  \ библиотека интерфейса поверх hype3
+ <a href="../devel/~day/wfl/examples"><img src="images/example.png" class="icon">пример</a>
+</li>
+<li>REQUIRE AT-XY <a href="../devel/~day/common/console.f">~day/common/console.f</a> \ минимальный набор слов для консоли</li>
+<li>REQUIRE SetLocate <a href="../devel/~pi/lib/console.f">~pi/lib/console.f</a> \ поддержка консоли</li>
+</ul>
+<a id="WinCOM"></a><h3>Windows COM</h3>
+<ul>
+<li>REQUIRE ComInit <a href="../devel/~ac/lib/win/com/COM.F">~ac/lib/win/com/COM.F</a> \ базовая поддержка COM</li>
+<li>REQUIRE Extends <a href="../devel/~ac/lib/win/com/com_server.f">~ac/lib/win/com/com_server.f</a> \ COM сервер</li>
+</ul>
+<a id="services"></a><h3>Системные сервисы</h3>
+<ul>
+<li>REQUIRE CreateService <a href="../devel/~ac/lib/win/service/SERVICE.F">~ac/lib/win/service/SERVICE.F</a> \ сервисы NT</li>
+<li>REQUIRE InstallService95 <a href="../devel/~ac/lib/win/service/service95.f">~ac/lib/win/service/service95.f</a> \ "сервисы" для Win9x/ME</li>
+</ul>
+<a id="datetime"></a><h3>Дата и время</h3>
+<ul>
+<li>REQUIRE DateTime# <a href="../devel/~ac/lib/win/date/date-int.f">~ac/lib/win/date/date-int.f</a> \ дата/время в разных форматах</li>
+<li>REQUIRE UNIXDATE <a href="../devel/~ac/lib/win/date/unixdate.f">~ac/lib/win/date/unixdate.f</a> \ поддержка unixdate</li>
+<li>REQUIRE FileDateTime# <a href="../devel/~ac/lib/win/file/filetime.f">~ac/lib/win/file/filetime.f</a> \ дата/время файловой системы</li>
+<li>REQUIRE parse-date? <a href="../devel/~ygrek/lib/spec/sdate.f">~ygrek/lib/spec/sdate.f</a> \ разбор даты в виде S" Tue, 19 Dec 2006 19:55:16 +0300"</li>
+<li>REQUIRE parse-num-unixdate <a href="../devel/~ygrek/lib/spec/sdate2.f">~ygrek/lib/spec/sdate2.f</a> \ разбор даты в виде S" 2007-01-27T17:40:36+03:00"</li>
+<li>REQUIRE DateTime&gt;Num <a href="../devel/~ygrek/lib/spec/unixdate.f">~ygrek/lib/spec/unixdate.f</a> \ преобразование unix timestamp в дату и обратно</li>
+</ul>
+<a id="db"></a><h3>Базы данных</h3>
+<ul>
+<li>REQUIRE StartSQL <a href="../devel/~yz/lib/ODBC.F">~yz/lib/ODBC.F</a> \ ODBC, типизированные данные</li>
+<li>REQUIRE StartSQL <a href="../devel/~ac/lib/win/odbc/ODBC.F">~ac/lib/win/odbc/ODBC.F</a> \ ODBC, все данные как строки</li>
+<li>REQUIRE ExecSQLTxt <a href="../devel/~pinka/lib/win/odbc/ODBC-txt.f">~pinka/lib/win/odbc/ODBC-txt.f</a> \ поддержка DELETE и UPDATE для Text File Driver</li>
+<li>REQUIRE db3_open <a href="../devel/~ac/lib/lin/sql/sqlite3.f">~ac/lib/lin/sql/sqlite3.f</a> \ SQLite
+ <a href="http://www.sqlite.org/download.html"><img src="images/wrap.png" class="icon">sqlite3.dll</a>
+</li>
+<li>REQUIRE MyQuery <a href="../devel/~day/lib/mysql.f">~day/lib/mysql.f</a> \ MySQL обёртка
+ <a href="http://dev.mysql.com/downloads/"><img src="images/wrap.png" class="icon">libmysql.dll</a>
+</li>
+</ul>
+<a id="threads"></a><h3>Процессы, потоки, итп</h3>
+<ul>
+<li>REQUIRE StartApp <a href="../devel/~ac/lib/win/process/process.f">~ac/lib/win/process/process.f</a> \ запуск приложений из командной строки</li>
+<li>REQUIRE GetProcessACL <a href="../devel/~ac/lib/win/access/nt_access.f">~ac/lib/win/access/nt_access.f</a> \ права доступа</li>
+<li>REQUIRE IsapiRunExtension <a href="../devel/~ac/lib/win/isapi/isapi.f">~ac/lib/win/isapi/isapi.f</a> \ поддержка ISAPI-совместимых расширений</li>
+<li>REQUIRE CREATE-CP <a href="../devel/~ac/lib/win/thread/pool.f">~ac/lib/win/thread/pool.f</a> \ пул потоков в Win200x</li>
+<li>REQUIRE CREATE-MUTEX <a href="../lib/win/mutex.f">lib/win/mutex.f</a> \ мутексы</li>
+<li>REQUIRE ENTER-CS <a href="../devel/~pinka/lib/multi/critical.f">~pinka/lib/multi/critical.f</a> \ критические секции</li>
+<li>REQUIRE WaitAll <a href="../devel/~pinka/lib/multi/Synchr.f">~pinka/lib/multi/Synchr.f</a> \ синхронизация потоков - "wait for single", "wait for all"</li>
+</ul>
+<a id="ini-registry"></a><h3>Реестр Windows</h3>
+<ul>
+<li>REQUIRE RG_CreateKey <a href="../devel/~ac/lib/win/registry2.f">~ac/lib/win/registry2.f</a> \ реестр Windows</li>
+<li>REQUIRE IniFile@ <a href="../devel/~ac/lib/win/ini.f">~ac/lib/win/ini.f</a> \ ini-файлы</li>
+</ul>
+<a id="str"></a><h3>Строки</h3>
+<ul>
+<li>REQUIRE STR@ <a href="../devel/~ac/lib/str5.f">~ac/lib/str5.f</a> \ динамические строки</li>
+<li>REQUIRE BNF <a href="../devel/~ac/lib/transl/BNF.F">~ac/lib/transl/BNF.F</a> \ основные типы данных BNF</li>
+<li>REQUIRE CHECK-SET <a href="../devel/~day/common/sbnf.f">~day/common/sbnf.f</a> \ простой BNF парсер</li>
+<li>REQUIRE WildCMP-U <a href="../devel/~pinka/lib/mask.f">~pinka/lib/mask.f</a> \ сравнение строки с маской</li>
+<li>REQUIRE ULIKE <a href="../devel/~pinka/lib/like.f">~pinka/lib/like.f</a> \ сравнение строки и маски</li>
+<li>REQUIRE PcreMatch <a href="../devel/~ac/lib/string/regexp.f">~ac/lib/string/regexp.f</a> \ PCRE обёртка
+ <a href="ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/"><img src="images/wrap.png" class="icon">pcre.dll</a>
+</li>
+<li>REQUIRE BregexpMatch <a href="../devel/~ac/lib/string/bregexp/bregexp.f">~ac/lib/string/bregexp/bregexp.f</a> \ bregexp.dll обёртка
+ <a href="http://www.hi-ho.ne.jp/babaq/eng/bregexp.html"><img src="images/wrap.png" class="icon">bregexp.dll</a>
+</li>
+<li>REQUIRE UPPERCASE <a href="../devel/~ac/lib/string/uppercase.f">~ac/lib/string/uppercase.f</a> \ перевод в верхний регистр</li>
+<li>REQUIRE COMPARE-U <a href="../devel/~ac/lib/string/compare-u.f">~ac/lib/string/compare-u.f</a> \ сравнение без учёта регистра</li>
+<li>REQUIRE GetParam <a href="../devel/~ac/lib/string/get_params.f">~ac/lib/string/get_params.f</a> \ рахбор строки URL-параметров</li>
+<li>REQUIRE SPLIT- <a href="../devel/~pinka/samples/2005/lib/split.f">~pinka/samples/2005/lib/split.f</a> \ разбиение строки по подстроке, замена "на месте"</li>
+<li>REQUIRE replace-str- <a href="../devel/~pinka/samples/2005/lib/replace-str.f">~pinka/samples/2005/lib/replace-str.f</a> \ замена в строках</li>
+<li>REQUIRE FINE-HEAD <a href="../devel/~pinka/samples/2005/lib/split-white.f">~pinka/samples/2005/lib/split-white.f</a> \ удаление пробелов по краям строк</li>
+<li>REQUIRE TYPE&gt;STR <a href="../devel/~ygrek/lib/typestr.f">~ygrek/lib/typestr.f</a> \ перенаправление всего TYPE вывода в строку</li>
+<li>REQUIRE split <a href="../devel/~profit/lib/bac4th-str.f">~profit/lib/bac4th-str.f</a> \ строковые операции на bac4th с автоматическим управлением памятью</li>
+<li>REQUIRE CEQUAL <a href="../devel/~pinka/spf/string-equal.f">~pinka/spf/string-equal.f</a> \ CEQUAL ( addr1 u1 addr2 u2 -- ? )</li>
+<li>REQUIRE re_match? <a href="../devel/~ygrek/lib/re/re.f">~ygrek/lib/re/re.f</a> \ регулярные выражения POSIX, форт-реализация</li>
+</ul>
+<a id="files"></a><h3>Файлы</h3>
+<ul>
+<li>REQUIRE OPEN-FILE-SHARED-DELETE <a href="../devel/~ac/lib/win/file/share-delete.f">~ac/lib/win/file/share-delete.f</a> \ открытие файла с "мягким" совместным доступом</li>
+<li>REQUIRE LAY-PATH <a href="../devel/~pinka/samples/2005/lib/lay-path.f">~pinka/samples/2005/lib/lay-path.f</a> \ создание пути каталогов</li>
+<li>REQUIRE ATTACH <a href="../devel/~pinka/samples/2005/lib/append-file.f">~pinka/samples/2005/lib/append-file.f</a> \ безопасная запись в файл</li>
+<li>REQUIRE SPEAK-WITH <a href="../devel/~pinka/samples/2005/ext/tank.f">~pinka/samples/2005/ext/tank.f</a> \ контроль потока вывода, выполнение xt с перенаправлением вывода в файл</li>
+</ul>
+<a id="xml"></a><h3>XML</h3>
+<ul>
+<li>REQUIRE XML_Evaluate <a href="../devel/~ac/lib/lin/xml/expat.f">~ac/lib/lin/xml/expat.f</a> \ XML via libexpat
+ <a href="http://sourceforge.net/projects/expat/"><img src="images/wrap.png" class="icon">libexpat.dll</a>
+</li>
+<li>REQUIRE 
+ XML_READ_DOC <a href="../devel/~ac/lib/lin/xml/xml.f">~ac/lib/lin/xml/xml.f</a> \ XML via libxml2 
+ <a href="http://zlatkovic.com/pub/libxml/"><img src="images/wrap.png" class="icon">libxml2.dll</a>
+</li>
+<li>REQUIRE XSLT <a href="../devel/~ac/lib/lin/xml/xslt.f">~ac/lib/lin/xml/xslt.f</a> \ XSLT via libxslt 
+ <a href="http://zlatkovic.com/pub/libxml/"><img src="images/wrap.png" class="icon">libxslt.dll</a>
+</li>
+<li>REQUIRE Tidy <a href="../devel/~ac/lib/lin/tidy/tidy.f">~ac/lib/lin/tidy/tidy.f</a> \ Wrapper for tidy.dll
+ <a href="http://dev.int64.org/tidy.html"><img src="images/wrap.png" class="icon">tidy.dll</a>
+</li>
+</ul>
+<a id="oop"></a><h3>ООП расширения</h3>
+<ul>
+<li>REQUIRE CLASS: <a href="../devel/~day/joop/oop.f">~day/joop/oop.f</a> \ just oop с кучей примеров</li>
+<li>REQUIRE CLASS: <a href="../devel/~af/mc/microclass.f">~af/mc/microclass.f</a> \ microclass</li>
+<li>REQUIRE CLASS: <a href="../devel/~day/mc/microclass.f">~day/mc/microclass.f</a> \ microclass</li>
+<li>REQUIRE CLASS <a href="../devel/~day/hype3/hype3.f">~day/hype3/hype3.f</a> \ Hype 3
+  <a href="../devel/~day/hype3/reference.pdf"><img src="images/doc.png" class="icon">reference</a>
+</li>
+</ul>
+<a id="vocs"></a><h3>Словари</h3>
+<ul>
+<li>REQUIRE InVoc{ <a href="../devel/~ac/lib/transl/vocab.f">~ac/lib/transl/vocab.f</a> \ упрощение манипуляций со словарями (аналог MODULE:)</li>
+<li>REQUIRE ForEach <a href="../devel/~ac/lib/ns/iterators.f">~ac/lib/ns/iterators.f</a> \ итераторы для контекстных словарей</li>
+<li>REQUIRE ForEach-Word <a href="../devel/~pinka/lib/Words.f">~pinka/lib/Words.f</a> \ ForEach-Word</li>
+<li>REQUIRE QuickSWL-Support <a href="../devel/~pinka/spf/quick-swl2.f">~pinka/spf/quick-swl2.f</a> \ быстрый поиск по словарю (за счёт хэширования)</li>
+<li>REQUIRE DLOPEN <a href="../devel/~ac/lib/ns/dlopen.f">~ac/lib/ns/dlopen.f</a> \ unix-совместимый способ подключения WindowsDLL/UnixSO</li>
+<li>\ <a href="../devel/~ac/lib/ns/">~ac/lib/ns/</a> \ отображение внешних древовидных структур на форт-словарь (на XML, на структуру файлов, на БД sqlite)</li>
+</ul>
+<a id="mem"></a><h3>Память</h3>
+<ul>
+<li>REQUIRE STACK_MEM <a href="../devel/~ac/lib/memory/mem_stack.f">~ac/lib/memory/mem_stack.f</a> \ "стековое" управление памятью</li>
+<li>REQUIRE LowMemory? <a href="../devel/~ac/lib/memory/low_memory.f">~ac/lib/memory/low_memory.f</a> \ контроль за чрезмерным потреблением памяти</li>
+<li>REQUIRE PAllocSupport <a href="../devel/~af/lib/pallocate.f">~af/lib/pallocate.f</a> \ выделение памяти в глобальном хипе процесса (разделяемом между потоками)</li>
+<li>REQUIRE LOCALLOC <a href="../devel/~mak/LALLOC.F">~mak/LALLOC.F</a> \ локальный массив (на стеке возвратов)</li>
+<li>REQUIRE ALLOCATE2 <a href="../devel/~pinka/spf/mem2.f">~pinka/spf/mem2.f</a> \ слова для переключение памяти процсса и потока</li>
+<li>REQUIRE LoadDelphiMM <a href="../devel/~ss/lib/borlndmm.f">~ss/lib/borlndmm.f</a> \ менеджер памяти Borland</li>
+<li>REQUIRE INIT-TASK-VALUES <a href="../devel/~ss/lib/task-values.f">~ss/lib/task-values.f</a> \ глобальные переменные потока</li>
+<li>REQUIRE PROTECT-RETURN-STACK <a href="../devel/~ss/ext/stack-guard.f">~ss/ext/stack-guard.f</a> \ защита стека возвратов от затирания стеком данных</li>
+<li>REQUIRE GMEM <a href="../devel/~yz/lib/gmem.f">~yz/lib/gmem.f</a> \ глобальная память разделяемая между потоками</li>
+</ul>
+<a id="misc"></a><h3>Разное</h3>
+<ul>
+<li>REQUIRE CONST <a href="../devel/~micro/lib/const/CONST.F">~micro/lib/const/CONST.F</a> \ перечисление констант</li>
+<li>REQUIRE ENUM <a href="../devel/~ygrek/lib/enum.f">~ygrek/lib/enum.f</a> \ перечисление групп подобных слов</li>
+<li>REQUIRE enqueueNOTFOUND <a href="../devel/~pinka/samples/2006/core/trans/nf-ext.f">~pinka/samples/2006/core/trans/nf-ext.f</a> \ расширение транслятора (NOTFOUND)</li>
+<li>REQUIRE StringToCB <a href="../devel/~day/lib/clipboard.f">~day/lib/clipboard.f</a> \ Чтение/запись строковых значений из буфера обмена Windows</li>
+</ul>
+<a id="encoding"></a><h3>Кодировки</h3>
+<ul>
+<li>REQUIRE UNICODE&gt;UTF8 <a href="../devel/~ac/lib/win/com/COM.F">~ac/lib/win/com/COM.F</a> \ преобразование из Unicode (2 байта) в UTF-8 и обратно</li>
+<li>REQUIRE unicode&gt; <a href="../devel/~day/lib/unicode.f">~day/lib/unicode.f</a> \ преобразование из Unicode в ANSI и обратно</li>
+<li>REQUIRE utf8Decode <a href="../devel/~profit/lib/utf8.f">~profit/lib/utf8.f</a> \ преобразование из UTF-8 в Unicode (2 байта), без использования WINAPI функций</li>
+<li>REQUIRE debase64 <a href="../devel/~ac/lib/string/CONV.F">~ac/lib/string/CONV.F</a> \ base64, win-koi, urlencode, etc</li>
+<li>REQUIRE iconv: <a href="../devel/~ygrek/lib/iconv.f">~ygrek/lib/iconv.f</a> \ обёртка для libiconv
+ <a href="http://www.zlatkovic.com/pub/libxml/"><img src="images/wrap.png" class="icon">libiconv.dll</a>
+</li>
+<li>REQUIRE ICONV <a href="../devel/~ac/lib/lin/iconv/iconv.f">~ac/lib/lin/iconv/iconv.f</a> \ обёртка для libiconv</li>
+</ul>
+<hr>
+<p><em>Использованы иконки <a href="http://tango.freedesktop.org/Tango_Icon_Library">Tango project</a></em></p>
+</td></tr></table></div></body>
+</html>

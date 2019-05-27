@@ -1,0 +1,192 @@
+<HTML>
+<HEAD>
+ <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1251">
+ <STYLE type="text/css">
+body {background:white;}
+* {font-family: arial, verdana, sans-serif}
+code {font-family: 'Lucida Console', 'Courier New', monospace}
+pre, code { background : #EEEEF4} </STYLE>
+</HEAD>
+<BODY>
+<div align="center">
+<table width="800">
+<tr><td align="left">
+<h1>SP-Forth</h1>
+
+<p><title>SP-Forth</title></p>
+
+<!-- $Revision: 1.11 $ -->
+
+<h2>ОПИСАНИЕ</h2>
+
+<p>SP-Forth это надёжная и удобная форт система генерирующая оптимизированный
+машинный(native) код для процессоров Intel x86. Работает на Windows 9x, NT и Linux.</p>
+
+<p>SP-Forth является свободным программным обеспечением. См. раздел <a href="#license">ЛИЦЕНЗИЯ</a></p>
+
+<p>Мы распространяем данную программу в надежде на то, что она будет вам полезной,
+однако НЕ ПРЕДОСТАВЛЯЕМ НА НЕЕ НИКАКИХ ГАРАНТИЙ, в том числе ГАРАНТИИ ТОВАРНОГО
+СОСТОЯНИЯ ПРИ ПРОДАЖЕ и ПРИГОДНОСТИ ДЛЯ ИСПОЛЬЗОВАНИЯ В КОНКРЕТНЫХ ЦЕЛЯХ.</p>
+
+<h2>УСТАНОВКА (Windows)</h2>
+
+<p>SP-Forth (SPF) для Windows распространяется как архив или как
+самоустанавливающийся исполняемый файл.</p>
+
+<p>Если у вас обычный инсталлятор - просто запустите его. Мастер
+настройки проведёт вас через установочный процесс.</p>
+
+<p>Если вы устанавливаете из архива - распакуйте его в желаемый каталог. Всё,
+теперь SPF готов к использованию. Если же вы хотите ассоциировать <code>*.f</code> и <code>*.spf</code>
+файлы с <code>spf4.exe</code> - запустите <code>docs/install/install.bat</code>, который покажет GUI
+окошко для настройки реестра. Или вы можете вручную отредактировать файл
+<code>docs/install/spf_path_install.reg</code> (укажите правильный путь к <code>spf4.exe</code>) и
+запустить его. Теперь вы можете писать свой код, сохранить его в <code>*.f</code> файл и
+запускать на исполнение двойным кликом мышью.</p>
+
+<h2>УСТАНОВКА (Linux)</h2>
+
+<p>SP-Forth для Linux распространяется в виде  архива  или  бинарных  пакетов  для
+конкретных дистрибутивов (на текущий момент только Debian).</p>
+
+<p>После распаковки  архива  создайте  символическую  ссылку  на  бинарник  <code>spf4</code>
+где-нибудь в PATH, чтобы SPF мог найти <code>lib</code> и <code>devel</code>.  Вам  потребуется  gcc  для
+компиляции <code>src/posix/consts.c</code> чтобы сгенерировать платформенно-зависимый код.</p>
+
+<p>SPF в бинарном пакете рапределит оригинальное дерево исходников по нескольким каталогам, в
+соответствии с правилами дистрибутива (<code>/usr/bin</code>, <code>/usr/lib</code> и <code>/usr/share</code>).
+Исходный код пропатчен чтобы корректно находить <code>lib</code>  и  <code>devel</code>.  При  старте
+spf подключает <code>~/.spf4.ini</code></p>
+
+<h2>CONTENTS</h2>
+
+<p>Смотрите файл <a href="whatsnew.ru.txt">docs/whatsnew.ru.txt</a> с кратким описанием последних изменений.</p>
+
+<p>Каталоги (от корня установки) :</p>
+
+<ul>
+<li><code>/devel</code>   - дополнительные библиотеки и примеры</li>
+<li><code>/docs</code>    - документация</li>
+<li><code>/lib</code>     - стандартные библиотеки, ANS и не-ANS расширения такие как <code>float.f</code>, <code>locals.f</code> ...</li>
+<li><code>/samples</code> - отлаженные GUI и консольные примеры.</li>
+<li><code>/src</code>     - полные исходники с комментариями и скриптом для сборки</li>
+</ul>
+
+<p>Файлы в корневом каталоге:</p>
+
+<ul>
+<li><code>help.fhlp</code>        - подключается по умолчанию расширением <code>lib/ext/help.f</code></li>
+<li><code>jpf375c.exe</code>      - более старая версия СПФ для пересборки</li>
+<li><code>spf4.exe</code>         - SPF ;)</li>
+<li><code>spf4.ini</code>         - этот файл автоматически подключается SPF'ом при старте</li>
+</ul>
+
+<h2>ДОКУМЕНТАЦИЯ</h2>
+
+<p>Смотрите каталог <code>/docs</code>. Большинство документации на русском языке.</p>
+
+<ol>
+<li><p><a href="intro.ru.html">Особенности SPF</a></p>
+
+<p>Если вы уже знакомы с Фортом, но не знакомы с SPF</p></li>
+<li><p><a href="devel.ru.html">Краткий список библиотек</a></p>
+
+<p>Описание дополнительных библиотек из поставки SPF</p></li>
+<li><p><a href="../devel/~yz/index.html">~yz</a></p>
+
+<p>Документация к <a href="../devel/~yz/lib.html">библиотекам</a> Юрия Жиловца.</p>
+
+<p>В том числе к <a href="../devel/~yz/winlib.html">WinLib</a></p></li>
+<li><p><a href="../devel/~day/hype3/reference.pdf">HYPE 3</a></p>
+
+<p>Библиотека поддержки парадигмы ООП от Дмитрия Якимова.</p>
+
+<p>Руководство пользователя.</p></li>
+<li><p><a href="papers/spf_help.chm">SP-Forth SDK</a></p>
+
+<p>для SPF/3.70 2002 года.</p></li>
+</ol>
+
+<p>Расширение SPF (<code>lib/ext/help.f</code>) добавляет встроенную помощь в интерпретатор
+(слово <code>HELP</code>).</p>
+
+<p>Если этой документации недостаточно, задавайте вопросы в
+рассылке <code>spf-dev</code>, также загляните на <a href="http://wiki.forth.org.ru">Wiki</a>.</p>
+
+<h2>РАЗРАБОТКА</h2>
+
+<ul>
+<li><p>Последнюю версию всегда можно найти на SF.net</p>
+
+<p><a href="http://spf.sourceforge.net">http://spf.sourceforge.net</a></p>
+
+<p>Вы можете получить исходники из <a href="http://wiki.forth.org.ru/SpfCvs">CVS</a>.
+Репозиторий для анонимного доступа (только чтение)
+<code>:pserver:anonymous@spf.cvs.sourceforge.net:/cvsroot/spf</code></p>
+
+<p>Уведомления о коммитах в репозиторий идут в почтовую рассылку
+<a href="http://lists.sourceforge.net/lists/listinfo/spf-commits">spf-commits</a></p></li>
+<li><p>Для контакта с разработчиками подпишитесь на почтовую рассылку <a href="http://lists.sourceforge.net/lists/listinfo/spf-dev">spf-dev</a></p>
+
+<p>Или используйте веб-зеркало рассылки
+<a href="http://www.nabble.com/SP-Forth---DEV-(rus%29-f26012.html">SP-Forth - DEV (rus)</a>
+на <a href="http://www.nabble.com">Nabble</a></p></li>
+<li><p>Багтрекер (пожелания и багрепорты)</p>
+
+<p><a href="http://sourceforge.net/tracker/?group_id=17919">http://sourceforge.net/tracker/?group_id=17919</a></p>
+
+<p>Пожалуйста приводите подробное описание ошибки и способ воспроизведения.
+Обязательно сообщайте о неточностях или неполноте документации.</p>
+
+<p>Уведомления об активности на багтрекере идут в почтовую рассылку
+<a href="http://lists.sourceforge.net/lists/listinfo/spf-tickets">spf-tickets</a></p></li>
+<li><p>Проекты с использованием SPF (рекомендуем) :</p>
+
+<p><a href="http://www.eserv.ru">http://www.eserv.ru</a>         - HTTP/FTP/SMTP/POP3/IMAP сервер и прокси для Win32</p>
+
+<p><a href="http://www.delosoft.com">http://www.delosoft.com</a>     - Форт системы для карманных компьютеров</p>
+
+<p><a href="http://nncron.ru">http://nncron.ru</a>            - unix-подобный планировщик cron для Windows с поддержкой скриптов</p>
+
+<p><a href="http://forth-script.sf.net">http://forth-script.sf.net</a>  - SP-Forth как CGI</p>
+
+<p><a href="http://acweb.sf.net">http://acweb.sf.net</a>         - http сервер для Win32</p>
+
+<p><a href="http://acfreeproxy.sf.net">http://acfreeproxy.sf.net</a>   - http прокси сервер</p>
+
+<p><a href="http://acftp.sf.net">http://acftp.sf.net</a>         - ftp сервер</p></li>
+<li><p>Русское Форт-сообщество :</p>
+
+<p><a href="http://www.forth.org.ru">http://www.forth.org.ru</a></p></li>
+</ul>
+
+<p><a id="license"/></p>
+
+<h2>ЛИЦЕНЗИЯ</h2>
+
+<p>Вы вправе распространять и/или модифицировать ядро SP-Forth (т.е. все файлы из <code>src</code>) в соответствии с
+условиями <a href="http://www.fsf.org/licensing/licenses/gpl.html">GNU GPL</a>, опубликованной
+<a href="http://www.fsf.org">Free Software Foundation</a>.
+Все остальные файлы, включая код из <code>devel</code>, по умолчанию лицензированы под
+<a href="http://www.fsf.org/licensing/licenses/lgpl.html">GNU LGPL</a>, если не указано что-либо другое.</p>
+
+<p>Коротко говоря это значит следующее :</p>
+
+<ul>
+<li><p>Вы не имеете права модифицировать и распространять результат модификации ядра SPF не предоставляя при этом исходные коды.</p></li>
+<li><p>Вы можете компилировать оригинальным SPF'ом и распространять закрытое ПО.</p></li>
+<li><p>Вы можете использовать оригинальный код из <code>devel</code> вместо со своим собственным кодом для создания закрытого ПО.</p></li>
+<li><p>Вы обязаны поделиться с сообществом модификациями к оригинальному коду из <code>devel</code> если вы использовали результат этих модификаций
+ для создания закрытого ПО, при этом свой собственный код вы раскрывать не обязаны.</p></li>
+</ul>
+
+<h2>АВТОРЫ</h2>
+
+<p>Русское Форт сообщество и многие добровольцы.</p>
+
+<p>Начат Андреем Черезовым в 1992</p>
+
+<hr />
+
+<p>Последнее обновление : $Date: 2009/01/21 17:29:42 $</p>
+</td></tr></table></div></BODY></HTML>

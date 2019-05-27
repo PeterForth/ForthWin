@@ -1,0 +1,455 @@
+<HTML>
+<HEAD>
+ <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1251">
+ <STYLE type="text/css">
+body {background:white;}
+* {font-family: arial, verdana, sans-serif}
+code {font-family: 'Lucida Console', 'Courier New', monospace}
+pre, code { background : #EEEEF4} </STYLE>
+</HEAD>
+<BODY>
+<div align="center">
+<table width="800">
+<tr><td align="left">
+<p><a id="start"/></p>
+
+<h1><a href="readme.en.html">SPF</a> ANS support</h1>
+
+<p><title>SPF ANS support</title></p>
+
+<p><i>System documentation as required by ANS standard section <a href="http://forth.sourceforge.net/standard/dpans/dpans4.htm#4.">4.</a></i></p>
+
+<p><small>Last update: $Date: 2008/01/04 12:42:24 $</small></p>
+
+<hr />
+
+<!-- [[Russian](ans.ru.html)] [[English](ans.en.html)]
+
+---- -->
+
+<h2>Contents</h2>
+
+<ul>
+<li><a href="#general">General notes</a></li>
+<li><a href="#impl">Implementation-defined options</a></li>
+<li><a href="#amb">Ambigous conditions</a></li>
+<li><a href="#other">Other system documentation</a></li>
+</ul>
+
+<hr />
+
+<p><a id="general"/></p>
+
+<h3><a href="#general">General notes</a></h3>
+
+<p>Maximum ANS conformity is achieved by including <code>lib/include/ansi.f</code>.
+Additional words are defined, some of them dummies, etc. </p>
+
+<p>Also, a non-standard optimization of FILE wordset is fixed - <code>OPEN-FILE</code>,
+<code>CREATE-FILE</code> and other implicitly treat the input string as zero-ended (ignoring the
+length parameter). <code>lib/include/ansi-file.f</code> will add an extra zero byte in
+such case, after copying the file name to the dynamic buffer, which remains
+allocated for future use. You don't really need such behaviour when
+defining file names with string literal <code>S"</code> or string libraries
+<code>~ac/lib/str*.f</code>, as they ensure there is an extra zero byte. Though it can be
+helpful for using non-SPF libraries.</p>
+
+<hr />
+
+<p><a id="impl"/></p>
+
+<h3><a href="#impl">Implementation-defined options</a></h3>
+
+<ul>
+<li><p>aligned address requirements (<a href="http://forth.sourceforge.net/standard/dpans/dpans3.htm#3.1.3.3">3.1.3.3</a> Addresses); </p>
+
+<p>No requirements. You can access data at any address. Though <code>CREATE</code> aligns
+code to even adresses for more speed.</p></li>
+<li><p>behavior of <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.1320">6.1.1320</a> EMIT for non-graphic characters;</p>
+
+<p><code>TYPE</code> and <code>EMIT</code> fully depend on the OS API for handling special chracters,
+on Windows this results in performing special assigned actions such as Line
+Feed, Carriage Return, Beep etc</p></li>
+<li><p>character editing of <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.0695">6.1.0695</a> ACCEPT and <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.2.1390">6.2.1390</a> EXPECT;</p>
+
+<p><code>EXPECT</code> is not available (obsolete). <code>ACCEPT</code> fully depends on the
+capabilities of the shell. On Windows by default it provides command history
+and convenient one line editing with arrows, Ins, Del, Bksp etc</p></li>
+<li><p>character set (<a href="http://forth.sourceforge.net/standard/dpans/dpans3.htm#3.1.2">3.1.2</a> Character types, <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.1320">6.1.1320</a> EMIT, <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.1750">6.1.1750</a> KEY); </p>
+
+<p>?</p></li>
+<li><p>character-aligned address requirements (<a href="http://forth.sourceforge.net/standard/dpans/dpans3.htm#3.1.3.3">3.1.3.3</a> Addresses); </p>
+
+<p>No requirements are imposed. Character aligned data can start at any address.</p></li>
+<li><p>character-set-extensions matching characteristics (<a href="http://forth.sourceforge.net/standard/dpans/dpans3.htm#3.4.2">3.4.2</a> Finding definition names); </p>
+
+<p>The definition name matches the search string when and only when the
+corresponding characters in both strings are equal. As a consequence, SPF is
+case-sensitive.</p></li>
+<li><p>conditions under which control characters match a space delimiter (<a href="http://forth.sourceforge.net/standard/dpans/dpans3.htm#3.4.1.1">3.4.1.1</a> Delimiters); </p>
+
+<p>Parser treats all characters with ascii code less or equal to 32 (<code>BL</code>) as
+delimiters. This behaviour doesn't depend on the input source.</p></li>
+<li><p>format of the control-flow stack (<a href="http://forth.sourceforge.net/standard/dpans/dpans3.htm#3.2.3.2">3.2.3.2</a> Control-flow stack); </p>
+
+<p>Control flow stack is available and implemented using the data stack.
+Separate control flow stack implementation is available as an extension
+<code>~mak/lib/a_if.f</code>.</p></li>
+<li><p>conversion of digits larger than thirty-five (<a href="http://forth.sourceforge.net/standard/dpans/dpans3.htm#3.2.1.2">3.2.1.2</a> Digit conversion); </p>
+
+<p>SPF converts digits according to the ASCII character table, so <code>50 BASE ! a 0[ DECIMAL . .</code> 
+will produce <code>36 42</code>.</p></li>
+<li><p>display after input terminates in <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.0695">6.1.0695</a> ACCEPT and <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.2.1390">6.2.1390</a> EXPECT; </p>
+
+<p>Depends on the shell, by default the input is echoed while typing and
+remains on the screen at the same position when input is finished, with
+additional carriage return.</p></li>
+<li><p>exception abort sequence (as in <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.0680">6.1.0680</a> ABORT");</p>
+
+<p>?</p></li>
+<li><p>input line terminator (<a href="http://forth.sourceforge.net/standard/dpans/dpans3.htm#3.2.4.1">3.2.4.1</a> User input device); </p>
+
+<p>Input line is terminated with the sequence of two characters CRLF (ASCII codes
+hex 0D 0A). <code>UNIX-LINES</code> switches to LF (ASCII hex 0x0A), <code>DOS-LINES</code> restores
+default behavior. Current input line terminator is <code>EOLN ( -- a u )</code>.</p></li>
+<li><p>maximum size of a counted string, in characters (<a href="http://forth.sourceforge.net/standard/dpans/dpans3.htm#3.1.3.4">3.1.3.4</a> Counted strings, <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.2450">6.1.2450</a> WORD); </p>
+
+<p>255 characters</p></li>
+<li><p>maximum size of a parsed string (<a href="http://forth.sourceforge.net/standard/dpans/dpans3.htm#3.4.1">3.4.1</a> Parsing); </p>
+
+<p>255 characters ?</p></li>
+<li><p>maximum size of a definition name, in characters (<a href="http://forth.sourceforge.net/standard/dpans/dpans3.htm#3.3.1.2">3.3.1.2</a> Definition names); </p>
+
+<p>255 characters ?</p></li>
+<li><p>maximum string length for <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.1345">6.1.1345</a> ENVIRONMENT?, in characters; </p>
+
+<p>not limited by implementation of <code>ENVIRONMENT?</code></p></li>
+<li><p>method of selecting <a href="http://forth.sourceforge.net/standard/dpans/dpans3.htm#3.2.4.1">3.2.4.1</a> User input device; </p>
+
+<p>User input is taken from file handle <code>H-STDIN</code>. By default it is a standard
+input stream, i.e. console. </p></li>
+<li><p>method of selecting <a href="http://forth.sourceforge.net/standard/dpans/dpans3.htm#3.2.4.2">3.2.4.2</a> User output device; </p>
+
+<p>TYPE outputs to the file which handle is <code>H-STDOUT</code>. By default it goes to
+standard output i.e. console window.</p></li>
+<li><p>methods of dictionary compilation (<a href="http://forth.sourceforge.net/standard/dpans/dpans3.htm#3.3">3.3</a> The Forth dictionary); </p></li>
+<li><p>number of bits in one address unit (<a href="http://forth.sourceforge.net/standard/dpans/dpans3.htm#3.1.3.3">3.1.3.3</a> Addresses); </p>
+
+<p>8 bits in one address unit.</p></li>
+<li><p>number representation and arithmetic (<a href="http://forth.sourceforge.net/standard/dpans/dpans3.htm#3.2.1.1">3.2.1.1</a> Internal number representation); </p>
+
+<p>?</p></li>
+<li><p>ranges for n, +n, u, d, +d, and ud (<a href="http://forth.sourceforge.net/standard/dpans/dpans3.htm#3.1.3">3.1.3</a> Single-cell types, <a href="http://forth.sourceforge.net/standard/dpans/dpans3.htm#3.1.4">3.1.4</a> Cell-pair types); </p>
+
+<p>-2147483648 &lt;= n &lt;= 2147483647 <br />
+0 &lt;= +n &lt;= 2147483647 <br />
+0 &lt;= u &lt;= 4294967295 <br />
+-2^63 &lt;= d &lt;= 2^63 - 1 <br />
+0 &lt;= +d &lt;= 2^63 - 1 <br />
+0 &lt;= ud &lt;= 2^64 - 1</p></li>
+<li><p>read-only data-space regions (<a href="http://forth.sourceforge.net/standard/dpans/dpans3.htm#3.3.3">3.3.3</a> Data space); </p></li>
+<li><p>size of buffer at <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.2450">6.1.2450</a> WORD (<a href="http://forth.sourceforge.net/standard/dpans/dpans3.htm#3.3.3.6">3.3.3.6</a> Other transient regions); </p>
+
+<p>255 bytes.</p></li>
+<li><p>size of one cell in address units (<a href="http://forth.sourceforge.net/standard/dpans/dpans3.htm#3.1.3">3.1.3</a> Single-cell types); </p>
+
+<p>4 address units</p></li>
+<li><p>size of one character in address units (<a href="http://forth.sourceforge.net/standard/dpans/dpans3.htm#3.1.2">3.1.2</a> Character types); </p>
+
+<p>1 address unit</p></li>
+<li><p>size of the keyboard terminal input buffer (<a href="http://forth.sourceforge.net/standard/dpans/dpans3.htm#3.3.3.5">3.3.3.5</a> Input buffers); </p>
+
+<p>1024 bytes</p></li>
+<li><p>size of the pictured numeric output string buffer (<a href="http://forth.sourceforge.net/standard/dpans/dpans3.htm#3.3.3.6">3.3.3.6</a> Other transient regions); </p>
+
+<p>4096 bytes</p></li>
+<li><p>size of the scratch area whose address is returned by <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.2.2000">6.2.2000</a> PAD (<a href="http://forth.sourceforge.net/standard/dpans/dpans3.htm#3.3.3.6">3.3.3.6</a> Other transient regions); </p>
+
+<p>1024 bytes</p></li>
+<li><p>system case-sensitivity characteristics (<a href="http://forth.sourceforge.net/standard/dpans/dpans3.htm#3.4.2">3.4.2</a> Finding definition names); </p>
+
+<p>SPF kernel is case sensitive. Extension <code>lib/ext/caseins.f</code> replaces
+<code>SEARCH-WORDLIST</code> to perform case-insensitive search.</p></li>
+<li><p>system prompt (<a href="http://forth.sourceforge.net/standard/dpans/dpans3.htm#3.4">3.4</a> The Forth text interpreter, <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.2050">6.1.2050</a> QUIT); </p>
+
+<p>None</p></li>
+<li><p>type of division rounding (<a href="http://forth.sourceforge.net/standard/dpans/dpans3.htm#3.2.2.1">3.2.2.1</a> Integer division, <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.0100">6.1.0100</a> */, <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.0110">6.1.0110</a> */MOD, <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.0230">6.1.0230</a> /, <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.0240">6.1.0240</a> /MOD, <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.1890">6.1.1890</a> MOD); </p>
+
+<p>?</p></li>
+<li><p>values of <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.2250">6.1.2250</a> STATE when true; </p>
+
+<p>TRUE i.e. -1</p></li>
+<li><p>values returned after arithmetic overflow (<a href="http://forth.sourceforge.net/standard/dpans/dpans3.htm#3.2.2.2">3.2.2.2</a> Other integer operations); </p></li>
+<li><p>whether the current definition can be found after <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.1250">6.1.1250</a> DOES> (<a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.0450">6.1.0450</a> :).</p></li>
+<li><p>Values used in the system by <a href="http://forth.sourceforge.net/standard/dpans/dpans9.htm#9.6.1.0875">9.6.1.0875</a> CATCH and <a href="http://forth.sourceforge.net/standard/dpans/dpans9.htm#9.6.1.2275">9.6.1.2275</a> THROW (<a href="http://forth.sourceforge.net/standard/dpans/dpans9.htm#9.3.1">9.3.1</a> THROW values, <a href="http://forth.sourceforge.net/standard/dpans/dpans9.htm#9.3.5">9.3.5</a> Possible actions on an ambiguous condition).</p></li>
+<li><p>encoding of keyboard events (<a href="http://forth.sourceforge.net/standard/dpans/dpans10.htm#10.6.2.1305">10.6.2.1305</a> EKEY);</p>
+
+<pre><code>byte    value
+0       AsciiChar
+2       ScanCod
+3       KeyDownFlag
+</code></pre></li>
+<li><p>duration of a system clock tick;</p>
+
+<p>?</p></li>
+<li><p>repeatability to be expected from execution of <a href="http://forth.sourceforge.net/standard/dpans/dpans10.htm#10.6.2.1905">10.6.2.1905</a> MS.</p>
+
+<p>not implemented</p></li>
+<li><p>file access methods used by <a href="http://forth.sourceforge.net/standard/dpans/dpans11.htm#11.6.1.0765">11.6.1.0765</a> BIN, <a href="http://forth.sourceforge.net/standard/dpans/dpans11.htm#11.6.1.1010">11.6.1.1010</a> CREATE-FILE, <a href="http://forth.sourceforge.net/standard/dpans/dpans11.htm#11.6.1.1970">11.6.1.1970</a> OPEN-FILE, <a href="http://forth.sourceforge.net/standard/dpans/dpans11.htm#11.6.1.2054">11.6.1.2054</a> R/O, <a href="http://forth.sourceforge.net/standard/dpans/dpans11.htm#11.6.1.2056">11.6.1.2056</a> R/W, and <a href="http://forth.sourceforge.net/standard/dpans/dpans11.htm#11.6.1.2425">11.6.1.2425</a> W/O;</p></li>
+<li><p>file exceptions;</p></li>
+<li><p>file line terminator (<a href="http://forth.sourceforge.net/standard/dpans/dpans11.htm#11.6.1.2090">11.6.1.2090</a> READ-LINE);</p>
+
+<p>See input line terminator explanation.</p></li>
+<li><p>file name format (<a href="http://forth.sourceforge.net/standard/dpans/dpans11.htm#11.3.1.4">11.3.1.4</a> File names);</p>
+
+<p>File paths can contain forward and backslashes as directory separators.</p></li>
+<li><p>information returned by <a href="http://forth.sourceforge.net/standard/dpans/dpans11.htm#11.6.2.1524">11.6.2.1524</a> FILE-STATUS;</p>
+
+<p>Not implemented.</p></li>
+<li><p>input file state after an exception (<a href="http://forth.sourceforge.net/standard/dpans/dpans11.htm#11.6.1.1717">11.6.1.1717</a> INCLUDE-FILE, <a href="http://forth.sourceforge.net/standard/dpans/dpans11.htm#11.6.1.1718">11.6.1.1718</a> INCLUDED);</p></li>
+<li><p>ior values and meaning (<a href="http://forth.sourceforge.net/standard/dpans/dpans11.htm#11.3.1.2">11.3.1.2</a> I/O results);</p>
+
+<p>ior values can be THROWn directly.</p></li>
+<li><p>maximum depth of file input nesting (<a href="http://forth.sourceforge.net/standard/dpans/dpans11.htm#11.3.4">11.3.4</a> Input source);</p>
+
+<p>SPF allows at most 64 INCLUDED nestings.</p></li>
+<li><p>maximum size of input line (<a href="http://forth.sourceforge.net/standard/dpans/dpans11.htm#11.3.6">11.3.6</a> Parsing);</p></li>
+<li><p>methods for mapping block ranges to files (<a href="http://forth.sourceforge.net/standard/dpans/dpans11.htm#11.3.2">11.3.2</a> Blocks in files);</p>
+
+<p>Not implemented.</p></li>
+<li><p>number of string buffers provided (<a href="http://forth.sourceforge.net/standard/dpans/dpans11.htm#11.6.1.2165">11.6.1.2165</a> S");</p>
+
+<p>1</p></li>
+<li><p>size of string buffer used by <a href="http://forth.sourceforge.net/standard/dpans/dpans11.htm#11.6.1.2165">11.6.1.2165</a> S".</p>
+
+<p>The same as for the input line.</p></li>
+<li><p>format and range of floating-point numbers (<a href="http://forth.sourceforge.net/standard/dpans/dpans12.htm#12.3.1">12.3.1</a> Data types, <a href="http://forth.sourceforge.net/standard/dpans/dpans12.htm#12.6.1.2143">12.6.1.2143</a> REPRESENT);</p></li>
+<li><p>results of <a href="http://forth.sourceforge.net/standard/dpans/dpans12.htm#12.6.1.2143">12.6.1.2143</a> REPRESENT when float is out of range;</p></li>
+<li><p>rounding or truncation of floating-point numbers (<a href="http://forth.sourceforge.net/standard/dpans/dpans12.htm#12.3.1.2">12.3.1.2</a> Floating-point numbers);</p></li>
+<li><p>size of floating-point stack (<a href="http://forth.sourceforge.net/standard/dpans/dpans12.htm#12.3.3">12.3.3</a> Floating-point stack);</p>
+
+<p>6</p></li>
+<li><p>width of floating-point stack (<a href="http://forth.sourceforge.net/standard/dpans/dpans12.htm#12.3.3">12.3.3</a> Floating-point stack).</p>
+
+<p>10 bytes. Float values can be represented in memory as 4, 8 and 10 byte values.</p></li>
+<li><p>maximum number of locals in a definition (<a href="http://forth.sourceforge.net/standard/dpans/dpans13.htm#13.3.3">13.3.3</a> Processing locals, <a href="http://forth.sourceforge.net/standard/dpans/dpans13.htm#13.6.2.1795">13.6.2.1795</a> LOCALS|).</p>
+
+<p>Not limited by implementation of locals <code>lib/ext/locals.f</code></p></li>
+<li><p>values and meaning of ior (<a href="http://forth.sourceforge.net/standard/dpans/dpans14.htm#14.3.1">14.3.1</a> I/O Results data type, <a href="http://forth.sourceforge.net/standard/dpans/dpans14.htm#14.6.1.0707">14.6.1.0707</a> ALLOCATE, <a href="http://forth.sourceforge.net/standard/dpans/dpans14.htm#14.6.1.1605">14.6.1.1605</a> FREE, <a href="http://forth.sourceforge.net/standard/dpans/dpans14.htm#14.6.1.2145">14.6.1.2145</a> RESIZE).</p></li>
+<li><p>ending sequence for input following <a href="http://forth.sourceforge.net/standard/dpans/dpans15.htm#15.6.2.0470">15.6.2.0470</a> ;CODE and <a href="http://forth.sourceforge.net/standard/dpans/dpans15.htm#15.6.2.0930">15.6.2.0930</a> CODE;</p></li>
+<li><p>manner of processing input following <a href="http://forth.sourceforge.net/standard/dpans/dpans15.htm#15.6.2.0470">15.6.2.0470</a> ;CODE and <a href="http://forth.sourceforge.net/standard/dpans/dpans15.htm#15.6.2.0930">15.6.2.0930</a> CODE;</p></li>
+<li><p>search-order capability for <a href="http://forth.sourceforge.net/standard/dpans/dpans15.htm#15.6.2.1300">15.6.2.1300</a> EDITOR and <a href="http://forth.sourceforge.net/standard/dpans/dpans15.htm#15.6.2.0740">15.6.2.0740</a> ASSEMBLER (<a href="http://forth.sourceforge.net/standard/dpans/dpans15.htm#15.3.3">15.3.3</a> The Forth dictionary);</p></li>
+<li><p>source and format of display by <a href="http://forth.sourceforge.net/standard/dpans/dpans15.htm#15.6.1.2194">15.6.1.2194</a> SEE.</p>
+
+<p>SEE is implemented as a disassembler in the <code>lib/ext/disasm.f</code> extension.</p></li>
+<li><p>maximum number of word lists in the search order (<a href="http://forth.sourceforge.net/standard/dpans/dpans16.htm#16.3.3">16.3.3</a> Finding definition names, <a href="http://forth.sourceforge.net/standard/dpans/dpans16.htm#16.6.1.2197">16.6.1.2197</a> SET-ORDER);</p>
+
+<p>16</p></li>
+<li><p>minimum search order (<a href="http://forth.sourceforge.net/standard/dpans/dpans16.htm#16.6.1.2197">16.6.1.2197</a> SET-ORDER, <a href="http://forth.sourceforge.net/standard/dpans/dpans16.htm#16.6.2.1965">16.6.2.1965</a> ONLY).</p>
+
+<p>FORTH-WORDLIST</p></li>
+</ul>
+
+<hr />
+
+<p><a id="amb"/></p>
+
+<h3><a href="#amb">Ambiguous conditions</a></h3>
+
+<ul>
+<li><p>a name is neither a valid definition name nor a valid number during text interpretation (<a href="http://forth.sourceforge.net/standard/dpans/dpans3.htm#3.4">3.4</a> The Forth text interpreter); </p>
+
+<p>Context vocabulary is searched for the <code>NOTFOUND</code> word. If it is present - it is executed
+with the name in question as a parameter. More details in <a href="intro.en.html#notfound">intro</a>.
+If the word is not processed by <code>NOTFOUND</code> or <code>NOTFOUND</code> itself is missing - exception <code>-2003</code>
+is thrown. By default exception is caught by main handler and system <code>QUIT</code>s. </p></li>
+<li><p>a definition name exceeded the maximum length allowed (<a href="http://forth.sourceforge.net/standard/dpans/dpans3.htm#3.3.1.2">3.3.1.2</a> Definition names); </p>
+
+<p>exception</p></li>
+<li><p>addressing a region not listed in <a href="http://forth.sourceforge.net/standard/dpans/dpans3.htm#3.3.3">3.3.3</a> Data Space; </p></li>
+<li><p>argument type incompatible with specified input parameter, e.g., passing a flag to a word expecting an n (<a href="http://forth.sourceforge.net/standard/dpans/dpans3.htm#3.1">3.1</a> Data types); </p>
+
+<p>No types verification available. Everything on the data stack is a cell.</p></li>
+<li><p>attempting to obtain the execution token, (e.g., with <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.0070">6.1.0070</a> ', <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.1550">6.1.1550</a> FIND, etc.) of a definition with undefined interpretation semantics; </p>
+
+<p>Returns execution token which will fail when executed</p></li>
+<li><p>dividing by zero (<a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.0100">6.1.0100</a> */, <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.0110">6.1.0110</a> */MOD, <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.0230">6.1.0230</a> /, <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.0240">6.1.0240</a> /MOD, <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.1561">6.1.1561</a> FM/MOD, <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.1890">6.1.1890</a> MOD, <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.2214">6.1.2214</a> SM/REM, <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.2370">6.1.2370</a> UM/MOD, <a href="http://forth.sourceforge.net/standard/dpans/dpans8.htm#8.6.1.1820">8.6.1.1820</a> M*/); </p>
+
+<p>Exception 0xC0000094</p></li>
+<li><p>insufficient data-stack space or return-stack space (stack overflow); </p>
+
+<p>Data stack and return stack share the same space (data stack grows up from
+the start, return stack grows down from the end), so stack overflow results
+in overwriting another stack, leading to strange behavior or system
+exception. Extension <code>~ss/ext/stack-guard.f</code> tries to detect stack overflow
+and throw the appropriate exception.</p></li>
+<li><p>insufficient space for loop-control parameters; </p>
+
+<p>?</p></li>
+<li><p>insufficient space in the dictionary; </p>
+
+<p>Ordinary dictionary size is limited by the size of data space. On overflow AV exception occurs
+(0xC0000005). Data space size can be increased by N bytes before <code>SAVE</code>ing new system with </p>
+
+<pre><code>HERE IMAGE-BASE - N + TO IMAGE-SIZE
+</code></pre>
+
+<p>This will take effect only after <code>SAVE</code>ing and launching saved system.</p>
+
+<p><small>It is possible to reallocate data space in live system (?)</small></p></li>
+<li><p>interpretating a word with undefined interpretation semantics; </p>
+
+<p>Usually it will raise exception -312 (Compilation mode only), but can be an undefined behaviour</p></li>
+<li><p>modifying the contents of the input buffer or a string literal (<a href="http://forth.sourceforge.net/standard/dpans/dpans3.htm#3.3.3.4">3.3.3.4</a> Text-literal regions, <a href="http://forth.sourceforge.net/standard/dpans/dpans3.htm#3.3.3.5">3.3.3.5</a> Input buffers); </p>
+
+<p>no problems as long as you don't exceed the buffer space</p></li>
+<li><p>overflow of a pictured numeric output string; </p>
+
+<p>AV</p></li>
+<li><p>parsed string overflow; </p>
+
+<p>AV</p></li>
+<li><p>producing a result out of range, e.g., multiplication (using *) results in a value too big to be represented by a single-cell integer (<a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.0090">6.1.0090</a> *, <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.0100">6.1.0100</a> */, <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.0110">6.1.0110</a> */MOD, <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.0570">6.1.0570</a> >NUMBER, <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.1561">6.1.1561</a> FM/MOD, <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.2214">6.1.2214</a> SM/REM, <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.2370">6.1.2370</a> UM/MOD, <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.2.0970">6.2.0970</a> CONVERT, <a href="http://forth.sourceforge.net/standard/dpans/dpans8.htm#8.6.1.1820">8.6.1.1820</a> M*/); </p>
+
+<p>silent truncation modulo maximum value size (2^32, 2^64)</p></li>
+<li><p>reading from an empty data stack or return stack (stack underflow); </p>
+
+<p>data stack underflow results in exception -4, underflowing return stack will either 
+do nothing or silently take down the system</p></li>
+<li><p>unexpected end of input buffer, resulting in an attempt to use a zero-length string as a name; </p></li>
+<li><p>>IN greater than size of input buffer (<a href="http://forth.sourceforge.net/standard/dpans/dpans3.htm#3.4.1">3.4.1</a> Parsing); </p></li>
+<li><p><a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.2120">6.1.2120</a> RECURSE appears after <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.1250">6.1.1250</a> DOES>; </p></li>
+<li><p>argument input source different than current input source for <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.2.2148">6.2.2148</a> RESTORE-INPUT; </p></li>
+<li><p>data space containing definitions is de-allocated (<a href="http://forth.sourceforge.net/standard/dpans/dpans3.htm#3.3.3.2">3.3.3.2</a> Contiguous regions); </p></li>
+<li><p>data space read/write with incorrect alignment (<a href="http://forth.sourceforge.net/standard/dpans/dpans3.htm#3.3.3.1">3.3.3.1</a> Address alignment); </p>
+
+<p>Ok</p></li>
+<li><p>data-space pointer not properly aligned (<a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.0150">6.1.0150</a> ,, <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.0860">6.1.0860</a> C,); </p>
+
+<p>Ok</p></li>
+<li><p>less than u+2 stack items (<a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.2.2030">6.2.2030</a> PICK, <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.2.2150">6.2.2150</a> ROLL); </p>
+
+<p>Silently returns some random number</p></li>
+<li><p>loop-control parameters not available ( <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.0140">6.1.0140</a> +LOOP, <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.1680">6.1.1680</a> I, <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.1730">6.1.1730</a> J, <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.1760">6.1.1760</a> LEAVE, <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.1800">6.1.1800</a> LOOP, <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.2380">6.1.2380</a> UNLOOP); </p></li>
+<li><p>most recent definition does not have a name (<a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.1710">6.1.1710</a> IMMEDIATE); </p>
+
+<p>AV</p></li>
+<li><p>name not defined by <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.2.2405">6.2.2405</a> VALUE used by <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.2.2295">6.2.2295</a> TO; </p>
+
+<p>AV</p></li>
+<li><p>name not found (<a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.0070">6.1.0070</a> ', <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.2033">6.1.2033</a> POSTPONE, <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.2510">6.1.2510</a> ['], <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.2.2530">6.2.2530</a> [COMPILE]); </p>
+
+<p>exception -321 (Not found)</p></li>
+<li><p>parameters are not of the same type (<a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.1240">6.1.1240</a> DO, <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.2.0620">6.2.0620</a> ?DO, <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.2.2440">6.2.2440</a> WITHIN); </p>
+
+<p>not verified, all types are treated the same</p></li>
+<li><p><a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.2033">6.1.2033</a> POSTPONE or <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.2.2530">6.2.2530</a> [COMPILE] applied to <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.2.2295">6.2.2295</a> TO; </p>
+
+<p>?</p></li>
+<li><p>string longer than a counted string returned by <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.2450">6.1.2450</a> WORD; </p>
+
+<p>?</p></li>
+<li><p>u greater than or equal to the number of bits in a cell (<a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.1805">6.1.1805</a> LSHIFT, <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.2162">6.1.2162</a> RSHIFT); </p>
+
+<p>the number of bits is taken modulo 32</p></li>
+<li><p>word not defined via <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.1000">6.1.1000</a> CREATE (<a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.0550">6.1.0550</a> >BODY, <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.1250">6.1.1250</a> DOES>); </p>
+
+<p>undefined behaviour</p></li>
+<li><p>words improperly used outside <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.0490">6.1.0490</a> &lt;# and <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.0040">6.1.0040</a> #> (<a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.0030">6.1.0030</a> #, <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.0050">6.1.0050</a> #S, <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.1670">6.1.1670</a> HOLD, <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.2210">6.1.2210</a> SIGN). </p>
+
+<p>UB</p></li>
+<li><p><a href="http://forth.sourceforge.net/standard/dpans/dpans10.htm#10.6.1.0742">10.6.1.0742</a> AT-XY operation can't be performed on user output device.</p>
+
+<p>not available in core SPF. Extension-implementation-defined</p></li>
+<li><p>attempting to position a file outside its boundaries (<a href="http://forth.sourceforge.net/standard/dpans/dpans11.htm#11.6.1.2142">11.6.1.2142</a> REPOSITION-FILE);</p>
+
+<p>Ok</p></li>
+<li><p>attempting to read from file positions not yet written (<a href="http://forth.sourceforge.net/standard/dpans/dpans11.htm#11.6.1.2080">11.6.1.2080</a> READ-FILE, <a href="http://forth.sourceforge.net/standard/dpans/dpans11.htm#11.6.1.2090">11.6.1.2090</a> READ-LINE);</p>
+
+<p>Ok (nothing is read)</p></li>
+<li><p>fileid is invalid (<a href="http://forth.sourceforge.net/standard/dpans/dpans11.htm#11.6.1.1717">11.6.1.1717</a> INCLUDE-FILE);</p>
+
+<p>exception (invalid handle)</p></li>
+<li><p>I/O exception reading or closing fileid (<a href="http://forth.sourceforge.net/standard/dpans/dpans11.htm#11.6.1.1717">11.6.1.1717</a> INCLUDE-FILE, <a href="http://forth.sourceforge.net/standard/dpans/dpans11.htm#11.6.1.1718">11.6.1.1718</a> INCLUDED);</p></li>
+<li><p>named file cannot be opened (<a href="http://forth.sourceforge.net/standard/dpans/dpans11.htm#11.6.1.1718">11.6.1.1718</a> INCLUDED);</p>
+
+<p>exception 2 (file not found)</p></li>
+<li><p>requesting an unmapped block number (<a href="http://forth.sourceforge.net/standard/dpans/dpans11.htm#11.3.2">11.3.2</a> Blocks in files);</p>
+
+<p>not implemented</p></li>
+<li><p>using <a href="http://forth.sourceforge.net/standard/dpans/dpans11.htm#11.6.1.2218">11.6.1.2218</a> SOURCE-ID when <a href="http://forth.sourceforge.net/standard/dpans/dpans7.htm#7.6.1.0790">7.6.1.0790</a> BLK is not zero.</p>
+
+<p>?</p></li>
+<li><p>DF@ or DF! is used with an address that is not double-float aligned;</p>
+
+<p>Ok</p></li>
+<li><p>F@ or F! is used with an address that is not float aligned;</p>
+
+<p>Ok</p></li>
+<li><p>SF@ or SF! is used with an address that is not single-float aligned;</p>
+
+<p>Ok</p></li>
+<li><p>floating point result out of range (e.g., in <a href="http://forth.sourceforge.net/standard/dpans/dpans12.htm#12.6.1.1430">12.6.1.1430</a> F/);</p></li>
+<li><p>BASE is not decimal (<a href="http://forth.sourceforge.net/standard/dpans/dpans12.htm#12.6.1.2143">12.6.1.2143</a> REPRESENT, <a href="http://forth.sourceforge.net/standard/dpans/dpans12.htm#12.6.2.1427">12.6.2.1427</a> F., <a href="http://forth.sourceforge.net/standard/dpans/dpans12.htm#12.6.2.1513">12.6.2.1513</a> FE., <a href="http://forth.sourceforge.net/standard/dpans/dpans12.htm#12.6.2.1613">12.6.2.1613</a> FS.);</p>
+
+<p>prints number in hexadecimal</p></li>
+<li><p>both arguments equal zero (<a href="http://forth.sourceforge.net/standard/dpans/dpans12.htm#12.6.2.1489">12.6.2.1489</a> FATAN2);</p>
+
+<p>result is zero</p></li>
+<li><p>cosine of argument is zero for <a href="http://forth.sourceforge.net/standard/dpans/dpans12.htm#12.6.2.1625">12.6.2.1625</a> FTAN;</p></li>
+<li><p>d can't be precisely represented as float in <a href="http://forth.sourceforge.net/standard/dpans/dpans12.htm#12.6.1.1130">12.6.1.1130</a> D>F;</p></li>
+<li><p>dividing by zero (<a href="http://forth.sourceforge.net/standard/dpans/dpans12.htm#12.6.1.1430">12.6.1.1430</a> F/);</p>
+
+<p><code>lib/include/float2.f</code> has two modes of operation - <code>SILENT-MODE</code> and
+<code>ERROR-MODE</code>. In the first case - the result of dividing by zero is
+infinity, in latter case - subsequent floating operation will raise an
+exception.</p></li>
+<li><p>exponent too big for conversion (<a href="http://forth.sourceforge.net/standard/dpans/dpans12.htm#12.6.2.1203">12.6.2.1203</a> DF!, <a href="http://forth.sourceforge.net/standard/dpans/dpans12.htm#12.6.2.1204">12.6.2.1204</a> DF@, <a href="http://forth.sourceforge.net/standard/dpans/dpans12.htm#12.6.2.2202">12.6.2.2202</a> SF!, <a href="http://forth.sourceforge.net/standard/dpans/dpans12.htm#12.6.2.2203">12.6.2.2203</a> SF@);</p></li>
+<li><p>float less than one (<a href="http://forth.sourceforge.net/standard/dpans/dpans12.htm#12.6.2.1477">12.6.2.1477</a> FACOSH);</p></li>
+<li><p>float less than or equal to minus-one (<a href="http://forth.sourceforge.net/standard/dpans/dpans12.htm#12.6.2.1554">12.6.2.1554</a> FLNP1);</p></li>
+<li><p>float less than or equal to zero (<a href="http://forth.sourceforge.net/standard/dpans/dpans12.htm#12.6.2.1553">12.6.2.1553</a> FLN, <a href="http://forth.sourceforge.net/standard/dpans/dpans12.htm#12.6.2.1557">12.6.2.1557</a> FLOG);</p></li>
+<li><p>float less than zero (<a href="http://forth.sourceforge.net/standard/dpans/dpans12.htm#12.6.2.1487">12.6.2.1487</a> FASINH, <a href="http://forth.sourceforge.net/standard/dpans/dpans12.htm#12.6.2.1618">12.6.2.1618</a> FSQRT);</p></li>
+<li><p>float magnitude greater than one (<a href="http://forth.sourceforge.net/standard/dpans/dpans12.htm#12.6.2.1476">12.6.2.1476</a> FACOS, <a href="http://forth.sourceforge.net/standard/dpans/dpans12.htm#12.6.2.1486">12.6.2.1486</a> FASIN, <a href="http://forth.sourceforge.net/standard/dpans/dpans12.htm#12.6.2.1491">12.6.2.1491</a> FATANH);</p></li>
+<li><p>integer part of float can't be represented by d in <a href="http://forth.sourceforge.net/standard/dpans/dpans12.htm#12.6.1.1470">12.6.1.1470</a> F>D;</p></li>
+<li><p>string larger than pictured-numeric output area (<a href="http://forth.sourceforge.net/standard/dpans/dpans12.htm#12.6.2.1427">12.6.2.1427</a> F., <a href="http://forth.sourceforge.net/standard/dpans/dpans12.htm#12.6.2.1513">12.6.2.1513</a> FE., <a href="http://forth.sourceforge.net/standard/dpans/dpans12.htm#12.6.2.1613">12.6.2.1613</a> FS.).</p></li>
+<li><p>executing a named local while in interpretation state (<a href="http://forth.sourceforge.net/standard/dpans/dpans13.htm#13.6.1.0086">13.6.1.0086</a> (LOCAL));</p></li>
+<li><p>name not defined by VALUE or LOCAL (<a href="http://forth.sourceforge.net/standard/dpans/dpans13.htm#13.6.1.2295">13.6.1.2295</a> TO).</p>
+
+<p>Mainly this will result in run-time error. <code>TO</code> executes the xt from the
+defined offset in the body of the word, if this code is invalid (which is
+the case, when the word was created not as <code>VALUE</code>) Access Violation occurs.</p></li>
+<li><p>deleting the compilation word-list (<a href="http://forth.sourceforge.net/standard/dpans/dpans15.htm#15.6.2.1580">15.6.2.1580</a> FORGET);</p>
+
+<p><code>FORGET</code> not implemented</p></li>
+<li><p>fewer than u+1 items on control-flow stack (<a href="http://forth.sourceforge.net/standard/dpans/dpans15.htm#15.6.2.1015">15.6.2.1015</a> CSPICK, <a href="http://forth.sourceforge.net/standard/dpans/dpans15.htm#15.6.2.1020">15.6.2.1020</a> CSROLL);</p></li>
+<li><p>name can't be found (<a href="http://forth.sourceforge.net/standard/dpans/dpans15.htm#15.6.2.1580">15.6.2.1580</a> FORGET);</p>
+
+<p><code>FORGET</code> not implemented</p></li>
+<li><p>name not defined via <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.1000">6.1.1000</a> CREATE (<a href="http://forth.sourceforge.net/standard/dpans/dpans15.htm#15.6.2.0470">15.6.2.0470</a> ;CODE);</p></li>
+<li><p><a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.2033">6.1.2033</a> POSTPONE applied to <a href="http://forth.sourceforge.net/standard/dpans/dpans15.htm#15.6.2.2532">15.6.2.2532</a> [IF];</p></li>
+<li><p>reaching the end of the input source before matching <a href="http://forth.sourceforge.net/standard/dpans/dpans15.htm#15.6.2.2531">15.6.2.2531</a> [ELSE] or <a href="http://forth.sourceforge.net/standard/dpans/dpans15.htm#15.6.2.2533">15.6.2.2533</a> [THEN] (<a href="http://forth.sourceforge.net/standard/dpans/dpans15.htm#15.6.2.2532">15.6.2.2532</a> [IF]);</p></li>
+<li><p>removing a needed definition (<a href="http://forth.sourceforge.net/standard/dpans/dpans15.htm#15.6.2.1580">15.6.2.1580</a> FORGET).</p>
+
+<p><code>FORGET</code> not implemented</p></li>
+<li><p>changing the compilation word list (<a href="http://forth.sourceforge.net/standard/dpans/dpans16.htm#16.3.3">16.3.3</a> Finding definition names);</p></li>
+<li><p>search order empty (<a href="http://forth.sourceforge.net/standard/dpans/dpans16.htm#16.6.2.2037">16.6.2.2037</a> PREVIOUS);</p></li>
+<li><p>too many word lists in search order (<a href="http://forth.sourceforge.net/standard/dpans/dpans16.htm#16.6.2.0715">16.6.2.0715</a> ALSO).</p>
+
+<p>AV</p></li>
+</ul>
+
+<hr />
+
+<p><a id="other"/></p>
+
+<h3><a href="#other">Other system documentation</a></h3>
+
+<ul>
+<li><p>list of non-standard words using <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.2.2000">6.2.2000</a> PAD (<a href="http://forth.sourceforge.net/standard/dpans/dpans3.htm#3.3.3.6">3.3.3.6</a> Other transient regions); </p></li>
+<li><p>operator's terminal facilities available; </p></li>
+<li><p>program data space available, in address units; </p></li>
+<li><p>return stack space available, in cells; </p></li>
+<li><p>stack space available, in cells; </p></li>
+<li><p>system dictionary space required, in address units. </p></li>
+</ul>
+</td></tr></table></div></BODY></HTML>

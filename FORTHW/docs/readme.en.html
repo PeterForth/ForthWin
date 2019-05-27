@@ -1,0 +1,179 @@
+<HTML>
+<HEAD>
+ <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1251">
+ <STYLE type="text/css">
+body {background:white;}
+* {font-family: arial, verdana, sans-serif}
+code {font-family: 'Lucida Console', 'Courier New', monospace}
+pre, code { background : #EEEEF4} </STYLE>
+</HEAD>
+<BODY>
+<div align="center">
+<table width="800">
+<tr><td align="left">
+<h1>SP-Forth</h1>
+
+<p><title>SP-Forth</title></p>
+
+<!-- Translation in sync with readme.ru.md r1.10 -->
+
+<h2>ABOUT</h2>
+
+<p>SP-Forth is a reliable and comfortable forth system producing optimized native
+code for the Intel x86 processors. It runs on MS Windows 9x, NT and Linux.</p>
+
+<p>SP-Forth is free software, see <a href="#license">LICENSE</a> section for more information.</p>
+
+<p>This program is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.</p>
+
+<h2>INSTALLATION (Windows)</h2>
+
+<p>SP-Forth (SPF) for Windows is distributed as an archive or the self-installing
+executable.</p>
+
+<p>If you have an executable package - just run it. The wizard will guide you
+through the setup process.</p>
+
+<p>If you've got an archive - unpack it to the desired folder. It is ready to
+use now. If you want to associate <code>*.f</code> and <code>*.spf</code> files with <code>spf4.exe</code> - run
+<code>docs/install/install.bat</code> script, which will launch a GUI program for tweaking the
+registry settings. Alternatively you can edit <code>docs/install/spf_path_install.reg</code>
+manually (specify the correct path to your spf4.exe) and run it. Now you can
+write your code, save it as the *.f file and execute it by simply
+doubleclicking the source file.</p>
+
+<h2>INSTALLATION (Linux)</h2>
+
+<p>SP-Forth for Linux is distributed as a source tarball or packaged for specific Linux
+distribution (currently Debian only).</p>
+
+<p>After unpacking tarball put the symlink to spf4 binary somewhere in your path. So it will find
+required <code>lib</code> and <code>devel</code> files. You will need gcc to compile <code>src/posix/consts.c</code> to generate
+platform-specific code.</p>
+
+<p>The packaged version will  install  the  root  tree  in  separate  directories,
+according to the distro recommendation (<code>/usr/bin</code>, <code>/usr/lib</code>
+and <code>/usr/share</code>). Source code is patched to correctly find <code>lib</code>  and  <code>devel</code>
+directories. At startup spf will include <code>~/.spf4.ini</code>.</p>
+
+<h2>CONTENTS</h2>
+
+<p>See the <a href="whatsnew.en.txt">docs/whatsnew.en.txt</a> file for the short overview of recent changes.</p>
+
+<p>Directories:</p>
+
+<ul>
+<li><code>/devel</code>   - additional contributed libraries and examples</li>
+<li><code>/docs</code>    - documentation</li>
+<li><code>/lib</code>     - standard libraries, ANS and non-ANS extensions like <code>float.f</code>, <code>locals.f</code> ...</li>
+<li><code>/samples</code> - debugged GUI and console mode samples.</li>
+<li><code>/src</code>     - full sources with comments and compilation script.</li>
+</ul>
+
+<p>Files in the root directory:</p>
+
+<ul>
+<li><code>help.fhlp</code>        - default include for the <code>lib/ext/help.f</code> extension</li>
+<li><code>jpf375c.exe</code>      - an older version of SPF used to build itself</li>
+<li><code>spf4.exe</code>         - SPF itself</li>
+<li><code>spf4.ini</code>         - This file is automatically included by SPF at startup</li>
+</ul>
+
+<h2>DOCUMENTATION</h2>
+
+<p>See the <code>/docs</code> directory. The majority of the documentation is in Russian for
+now. If you need an English version, contact us, the translation will be done.</p>
+
+<ol>
+<li><p><a href="intro.en.html">SPF specifics</a></p>
+
+<p>If you are familiar with Forth, but not with SPF.</p></li>
+<li><p><a href="devel.en.html">Short overview of libraries</a></p>
+
+<p>Additional libraries in SPF distribution</p></li>
+</ol>
+
+<p>SPF extension (<code>lib/ext/help.f</code>) adds help support to the interpreter with the word <code>HELP</code>.</p>
+
+<p>If you have more questions - ask them at <code>spf-dev</code> mailing list.</p>
+
+<h2>DEVELOPMENT</h2>
+
+<ul>
+<li><p>The latest version can be downloaded from SF.net :</p>
+
+<p><a href="http://spf.sourceforge.net">http://spf.sourceforge.net</a></p>
+
+<p>You can obtain the latest sources from CVS. The repository for the anonymous
+read-only access is
+<code>:pserver:anonymous@spf.cvs.sourceforge.net:/cvsroot/spf</code></p>
+
+<p>Notifications on CVS commits go to
+<a href="http://lists.sourceforge.net/lists/listinfo/spf-commits">spf-commits</a> mailing list.</p></li>
+<li><p>The first place to contact the developers is the <a href="http://lists.sourceforge.net/lists/listinfo/spf-dev">spf-dev</a> mailing list</p>
+
+<p>Alternatively you can use mailing list web-mirror
+<a href="http://www.nabble.com/SP-Forth---DEV-(rus%29-f26012.html">SP-Forth - DEV (rus)</a> at
+<a href="http://www.nabble.com">Nabble</a>
+(though title has 'rus' in it, you may write english)</p></li>
+<li><p>Bugtracker (feature requests and bugreports welcome)</p>
+
+<p><a href="http://sourceforge.net/tracker/?group_id=17919">http://sourceforge.net/tracker/?group_id=17919</a></p>
+
+<p>Please provide a comprehensive description of the bug behaviour and ways
+to reproduce. Dont hesitate to report errors or omissions in the
+documentation too.</p>
+
+<p>Notifications on bugtracker activity go to <a href="http://lists.sourceforge.net/lists/listinfo/spf-tickets">spf-tickets</a> list</p></li>
+<li><p>Related projects (highly recommended) :</p>
+
+<p><a href="http://www.eserv.ru">http://www.eserv.ru</a>        - HTTP/FTP/SMTP/POP3/IMAP server and proxy for Win32</p>
+
+<p><a href="http://www.delosoft.com">http://www.delosoft.com</a>    - Forth systems for pocket computers</p>
+
+<p><a href="http://nncron.ru">http://nncron.ru</a>           - scriptable unix-like cron scheduler for Windows</p>
+
+<p><a href="http://forth-script.sf.net">http://forth-script.sf.net</a> - SP-Forth as CGI</p>
+
+<p><a href="http://acweb.sf.net">http://acweb.sf.net</a>        - web server for Win32</p>
+
+<p><a href="http://acfreeproxy.sf.net">http://acfreeproxy.sf.net</a>  - http proxy server</p>
+
+<p><a href="http://acftp.sf.net">http://acftp.sf.net</a>        - ftp server</p></li>
+<li><p>Russian Forth Interest Group :</p>
+
+<p><a href="http://www.forth.org.ru">http://www.forth.org.ru</a></p></li>
+</ul>
+
+<p><a id="license"/></p>
+
+<h2>LICENSE</h2>
+
+<p>You can modify and/or redistribute the core SP-Forth system (i.e. all files in <code>src</code>)
+under the terms of <a href="http://www.fsf.org/licensing/licenses/gpl.html">GNU GPL</a> as published by
+<a href="http://www.fsf.org">FSF</a>. All other files, including contrubuted code in <code>devel</code>, are
+licensed under <a href="http://www.fsf.org/licensing/licenses/gpl.html">GNU LGPL</a> by default (if not stated
+otherwise).</p>
+
+<p>Shortly speaking it means that :</p>
+
+<ul>
+<li><p>You are prohibited to modify core SPF system and distribute the result of this modification without providing full sources.</p></li>
+<li><p>You are allowed to compile and distribute closed-source projects with original SPF.</p></li>
+<li><p>You are allowed to use unmodified code from <code>devel</code> in combination with your own code in closed-source projects.</p></li>
+<li><p>You are obliged to contribute back your modifications to original code from <code>devel</code> if you modified and used it in closed-source project,
+ but you may leave your own code closed.</p></li>
+</ul>
+
+<h2>AUTHORS</h2>
+
+<p>Russian Forth Interest Group with the help of many contributors.</p>
+
+<p>Started by Andrey Cherezov in 1992</p>
+
+<hr />
+
+<p>Last updated : $Date: 2009/01/21 17:02:13 $</p>
+</td></tr></table></div></BODY></HTML>

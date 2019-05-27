@@ -1,0 +1,327 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>SP-Forth: additional libraries</title>
+<style type="text/css">
+            body {background:white;}
+            * {font-family: arial, verdana, sans-serif}
+            code {font-family: 'Lucida Console', 'Courier New', monospace}
+            pre, code { background : #EEEEF4}
+            img.icon { vertical-align:bottom; margin-left:0.5em; margin-right:0.2em; border:0; }
+            h3::before {content:'( '}
+            h3::after {content:' )'}
+        </style>
+</head>
+<body><div align="center"><table width="800"><tr><td align="left">
+<h1>
+<a href="readme.en.html">SP-Forth</a>: Additional libraries</h1>
+<p><small>$Date: 2009/01/20 20:45:35 $</small></p>
+<p><em>REQUIRE is a forth word, which loads library; unnecessary text is commented out, so you can use this list as a forth code to include libs :)</em></p>
+<hr>
+<p>[<a href="devel.ru.html">Русский</a>] [<a href="devel.en.html">English</a>]</p>
+<hr>
+<p>[<a href="#net">Network</a>] [<a href="#graphics">Graphics</a>] [<a href="#arc">Archives</a>] [<a href="#list">Linked lists</a>] [<a href="#record">Records</a>] [<a href="#data">Data structures</a>] [<a href="#sort-n-search">Sorting and search</a>] [<a href="#techniques">Programming techniques</a>] [<a href="#debug">Debugging facilities</a>] [<a href="#math">Math</a>] [<a href="#random">Random numbers</a>] [<a href="#hash">Hashes</a>] [<a href="#hash-func">Cryptographic hashes</a>] [<a href="#compiletime-const">Compile-time constants</a>] [<a href="#ui">User interface</a>] [<a href="#WinCOM">Windows COM</a>] [<a href="#services">System services</a>] [<a href="#datetime">Date and time</a>] [<a href="#db">Databases</a>] [<a href="#threads">Processes, threads, etc</a>] [<a href="#ini-registry">Windows registry and ini-files</a>] [<a href="#str">Strings</a>] [<a href="#files">Files</a>] [<a href="#xml">XML</a>] [<a href="#oop">OOP extensions</a>] [<a href="#vocs">Vocabularies</a>] [<a href="#mem">Memory</a>] [<a href="#misc">Miscellaneous</a>] [<a href="#encoding">Encodings</a>] </p>
+<hr>
+<a id="net"></a><h3>Network</h3>
+<ul>
+<li>REQUIRE CreateSocket <a href="../devel/~ac/lib/win/winsock/SOCKETS.F">~ac/lib/win/winsock/SOCKETS.F</a> \ basic TCP/IP support</li>
+<li>REQUIRE SslInit <a href="../devel/~ac/lib/win/winsock/ssl.f">~ac/lib/win/winsock/ssl.f</a> \ basic SSL/TLS support</li>
+<li>REQUIRE SslClientSocket <a href="../devel/~ac/lib/win/winsock/sockets_ssl.f">~ac/lib/win/winsock/sockets_ssl.f</a> \ SSL/TLS-server</li>
+<li>REQUIRE SocketLine <a href="../devel/~ac/lib/win/winsock/socketline2.f">~ac/lib/win/winsock/socketline2.f</a> \ line-by-line buffered socket reading</li>
+<li>REQUIRE ReadFrom <a href="../devel/~ac/lib/win/winsock/SOCKNAME.F">~ac/lib/win/winsock/SOCKNAME.F</a> \ UDP support</li>
+<li>REQUIRE fsockopen <a href="../devel/~ac/lib/win/winsock/PSOCKET.F">~ac/lib/win/winsock/PSOCKET.F</a> \ simplified interface to sockets</li>
+<li>REQUIRE ForEachIP <a href="../devel/~ac/lib/win/winsock/foreach_ip.f">~ac/lib/win/winsock/foreach_ip.f</a> \ performing given tasks for each IP host</li>
+<li>REQUIRE SendDnsQuery <a href="../devel/~ac/lib/win/winsock/dns_q.f">~ac/lib/win/winsock/dns_q.f</a> \ querying DNS-servers</li>
+<li>REQUIRE PutFileTr <a href="../devel/~ac/lib/win/winsock/transmit.f">~ac/lib/win/winsock/transmit.f</a> \ high-speed file transmition in Windows</li>
+<li>REQUIRE SnmpInit <a href="../devel/~ac/lib/win/snmp/snmp.f">~ac/lib/win/snmp/snmp.f</a> \ SNMP support</li>
+<li>REQUIRE GET-FILE-VIAPROXY <a href="../devel/~ac/lib/lin/curl/curl.f">~ac/lib/lin/curl/curl.f</a> \ cURL-wrapper - send/receive files via HTTP/FTP/etc
+ <a href="http://curl.haxx.se/latest.cgi?curl=win32-devel-ssl"><img src="images/wrap.png" class="icon">libcurl.dll</a>
+</li>
+<li>REQUIRE WEB-SERVER <a href="../devel/~nn/lib/web/server.f">~nn/lib/web/server.f</a> \ simple HTTP-server</li>
+<li>\ <a href="../devel/~nn/lib/net">~nn/lib/net</a> \ HTTP, POP3, FTP, etc</li>
+</ul>
+<a id="graphics"></a><h3>Graphics</h3>
+<ul>
+<li>REQUIRE GLWindow <a href="../devel/~ygrek/lib/joopengl/GLWindow.f">~ygrek/lib/joopengl/GLWindow.f</a> \ OpenGL with joop</li>
+<li>REQUIRE CGLWindow <a href="../devel/~ygrek/lib/wfl/opengl/GLWindow.f">~ygrek/lib/wfl/opengl/GLWindow.f</a> \ OpenGL via WFL/hype3</li>
+<li>REQUIRE START-DRAW <a href="../devel/~profit/misc/basicdraw.f">~profit/misc/basicdraw.f</a> \ Small framework for simple interactive drawing</li>
+</ul>
+<a id="arc"></a><h3>Archives</h3>
+<ul>
+<li>REQUIRE gzip_write <a href="../devel/~ac/lib/win/arc/gzip/zlib.f">~ac/lib/win/arc/gzip/zlib.f</a> \ packing and unpacking GZip-streams
+ <a href="http://www.forth.org.ru/ext/zlib.dll"><img src="images/wrap.png" class="icon">zlib.dll (1.1.4)</a>
+ 
+</li>
+<li>REQUIRE 
+ zip-pack 
+ <a href="../devel/~profit/lib/7zip-dll.f">~profit/lib/7zip-dll.f</a>
+  \ packing and unpacking zip/7zip archives
+ <a href="http://www.csdinc.co.jp/archiver/lib/7-zip32.html#download"><img src="images/wrap.png" class="icon">7-zip32.dll</a>
+</li>
+<li>REQUIRE zlib_compress <a href="../devel/~ac/lib/lin/zlib/zlib.f">~ac/lib/lin/zlib/zlib.f</a> \ zlib wrapper
+ <a href="http://www.zlib.net"><img src="images/wrap.png" class="icon">zlib1.dll libz.so.1</a>
+</li>
+</ul>
+<a id="list"></a><h3>Linked lists</h3>
+<ul>
+<li>REQUIRE ListNode <a href="../devel/~day/joop/lib/list.f">~day/joop/lib/list.f</a> \ double-linked list</li>
+<li>REQUIRE AddNode <a href="../devel/~ac/lib/list/STR_LIST.F">~ac/lib/list/STR_LIST.F</a> \ linked list</li>
+<li>REQUIRE LINK, <a href="../devel/~day/common/link.f">~day/common/link.f</a> \ static list (compiles in code area)</li>
+<li>REQUIRE firstNode <a href="../devel/~day/lib/staticlist.f">~day/lib/staticlist.f</a> \ double-linked list, pretty much words</li>
+<li>REQUIRE list+s <a href="../devel/~pinka/lib/list_ext.f">~pinka/lib/list_ext.f</a> \ linked list </li>
+<li>REQUIRE cons <a href="../devel/~ygrek/lib/list/core.f">~ygrek/lib/list/core.f</a> \ list of cons pairs, core words</li>
+<li>REQUIRE lst( <a href="../devel/~ygrek/lib/list/ext.f">~ygrek/lib/list/ext.f</a> \ constructing list with %[ 1 % 2 % 3 % ]%</li>
+<li>REQUIRE reduce-this <a href="../devel/~ygrek/lib/list/more.f">~ygrek/lib/list/more.f</a> \ additional list operations</li>
+<li>REQUIRE write-list <a href="../devel/~ygrek/lib/list/write.f">~ygrek/lib/list/write.f</a> \ print list, also serialization suitable for EVALUATE</li>
+<li>REQUIRE write-list <a href="../devel/~ygrek/lib/list/all.f">~ygrek/lib/list/all.f</a> \ all words for cons pair lists</li>
+</ul>
+<a id="record"></a><h3>Records</h3>
+<ul>
+<li>REQUIRE STRUCT: <a href="../lib/ext/struct.f">lib/ext/struct.f</a> \ simple records</li>
+<li>REQUIRE f: <a href="../devel/~af/lib/struct.f">~af/lib/struct.f</a> \ defining records with elements-functions </li>
+<li>REQUIRE f: <a href="../devel/~af/lib/struct-t.f">~af/lib/struct-t.f</a> \ defining records with elements-functions in the temporary vocabulary</li>
+</ul>
+<a id="data"></a><h3>Data structures</h3>
+<ul>
+<li>REQUIRE Stack <a href="../devel/~day/joop/lib/stack.f">~day/joop/lib/stack.f</a> \ stack</li>
+<li>REQUIRE New-Queue <a href="../devel/~pinka/lib/queue_pr.f">~pinka/lib/queue_pr.f</a> \ priority queue</li>
+<li>REQUIRE x.mask <a href="../devel/~mlg/SrcLib/bitfield.f">~mlg/SrcLib/bitfield.f</a> \ bit array</li>
+<li>REQUIRE new-set <a href="../devel/~pinka/lib/charset.f">~pinka/lib/charset.f</a> \ ASCII characters set (as 256 bit array)</li>
+</ul>
+<a id="sort-n-search"></a><h3>Sorting and search</h3>
+<ul>
+<li>REQUIRE HeapSort <a href="../devel/~mlg/SrcLib/hsort.f">~mlg/SrcLib/hsort.f</a> \ heap sort</li>
+<li>REQUIRE quick_sort <a href="../devel/~pinka/samples/2003/common/QSORT.F">~pinka/samples/2003/common/QSORT.F</a> \ "quick" sort</li>
+<li>REQUIRE binary-search <a href="../devel/~profit/lib/binary-search.f">~profit/lib/binary-search.f</a> \ binary search</li>
+</ul>
+<a id="techniques"></a><h3>Programming techniques</h3>
+<ul>
+<li>REQUIRE { <a href="../lib/ext/locals.f">lib/ext/locals.f</a> \ local variables</li>
+<li>REQUIRE LAMBDA{ <a href="../devel/~pinka/lib/lambda.f">~pinka/lib/lambda.f</a> \ :NONAME but in the compilation state</li>
+<li>REQUIRE (: <a href="../devel/~yz/lib/inline.f">~yz/lib/inline.f</a> \ lambda analogue</li>
+<li>REQUIRE s( <a href="../devel/~spn/se.f">~spn/se.f</a> \ S-Expressions with garbage collector on top of SPF</li>
+<li>REQUIRE memoize: <a href="../devel/~ygrek/lib/fun/memoize.f">~ygrek/lib/fun/memoize.f</a> \ Memoize for (CELL -&gt; CELL) functions<a href="../devel/~ygrek/prog/fun/memoize.f"><img src="images/example.png" class="icon">example</a>
+</li>
+<li>REQUIRE CONT <a href="../devel/~profit/lib/bac4th.f">~profit/lib/bac4th.f</a> \ backtracking  <a href="../devel/~mlg/index.html#bacforth"><img src="images/doc.png" class="icon">~mlg/index.html#bacforth</a>
+</li>
+<li>REQUIRE axt=&gt; <a href="../devel/~profit/lib/bac4th-closures.f">~profit/lib/bac4th-closures.f</a> \ Dynamically generated patches of code (closures)</li>
+<li>REQUIRE AsQName <a href="../devel/~pinka/samples/2006/syntax/qname.f">~pinka/samples/2006/syntax/qname.f</a> \ Syntax extension: treat `string as S" string"</li>
+<li>REQUIRE AsQWord <a href="../devel/~pinka/spf/quoted-word.f">~pinka/spf/quoted-word.f</a> \ Syntax extension: 'c' is char code of c, 'word is xt of word, `string is S" string"</li>
+</ul>
+<a id="debug"></a><h3>Debugging facilities</h3>
+<ul>
+<li>REQUIRE HeapEnum <a href="../devel/~ac/lib/memory/heap_enum2.f">~ac/lib/memory/heap_enum2.f</a> \ enumerating allocated memory blocks on the heap</li>
+<li>REQUIRE mem_stub <a href="../devel/~day/lib/mem_sanity.f">~day/lib/mem_sanity.f</a> \ verifying FREE (via filling with template)</li>
+<li>REQUIRE MemReport <a href="../devel/~day/lib/memreport.f">~day/lib/memreport.f</a> \ memory leakages checking with stack report (supports multithreading)</li>
+<li>REQUIRE ACCERT( <a href="../lib/ext/debug/accert.f">lib/ext/debug/accert.f</a> \ conditional compilation</li>
+<li>REQUIRE TRACER <a href="../lib/ext/debug/tracer.f">lib/ext/debug/tracer.f</a> \ detailed execution report</li>
+<li>REQUIRE .elapsed <a href="../devel/~af/lib/elapse.f">~af/lib/elapse.f</a> \ word's run-time measurement</li>
+<li>REQUIRE .AllStatistic <a href="../devel/~pinka/lib/tools/profiler.f">~pinka/lib/tools/profiler.f</a> \ word profiling (generates statistics for words and their run times)</li>
+<li>REQUIRE TESTCASES <a href="../devel/~ygrek/lib/testcase.f">~ygrek/lib/testcase.f</a> \ TESTCASES by ~day</li>
+<li>REQUIRE /TEST <a href="../devel/~profit/lib/testing.f">~profit/lib/testing.f</a> \ marking tests in code</li>
+</ul>
+<a id="math"></a><h3>Math</h3>
+<ul>
+<li>REQUIRE F. <a href="../lib/include/float2.f">lib/include/float2.f</a> \ floating point numbers</li>
+<li>REQUIRE FR* <a href="../devel/~nn/lib/fraction.f">~nn/lib/fraction.f</a> \ fractions' lib (enables fractions as '1/3')</li>
+<li>REQUIRE RATIO <a href="../devel/~pinka/lib/BigMath.f">~pinka/lib/BigMath.f</a> \ rational fractions</li>
+<li>REQUIRE inv_normalDF <a href="../devel/~ygrek/lib/math/inv_normal.f">~ygrek/lib/math/inv_normal.f</a> \ Normal distribution quantile</li>
+<li>REQUIRE InvertNumber <a href="../devel/~ygrek/lib/math/gcd.f">~ygrek/lib/math/gcd.f</a> \ Greatest common divisor and inverse number by modulo</li>
+</ul>
+<a id="random"></a><h3>Random numbers</h3>
+<ul>
+<li>REQUIRE RANDOM <a href="../lib/ext/rnd.f">lib/ext/rnd.f</a> \ linear congruent generator</li>
+<li>REQUIRE RANDOM <a href="../devel/~day/common/RND.F">~day/common/RND.F</a> \ linear congruent generator </li>
+<li>REQUIRE RANDOM <a href="../devel/~af/lib/random.f">~af/lib/random.f</a> \ linear congruent generator</li>
+<li>REQUIRE GENRAND <a href="../devel/~ygrek/lib/neilbawd/mersenne.f">~ygrek/lib/neilbawd/mersenne.f</a> \ Mersenne twister - high-speed and quality RNG</li>
+</ul>
+<a id="hash"></a><h3>Hashes</h3>
+<ul>
+<li>REQUIRE new-hash <a href="../devel/~pinka/lib/hash-table.f">~pinka/lib/hash-table.f</a> \ hash table</li>
+<li>REQUIRE ListAllocate <a href="../devel/~af/lib/simple_hash.f">~af/lib/simple_hash.f</a> \ hashed string array</li>
+<li>REQUIRE HASH-TABLE <a href="../devel/~yz/lib/hash.f">~yz/lib/hash.f</a> \ hash table</li>
+<li>\ <a href="../devel/~pinka/samples/2003/test-hash/">~pinka/samples/2003/test-hash/</a> \ speed comparison of hash implementations</li>
+<li>REQUIRE HASH <a href="../devel/~day/common/hash.f">~day/common/hash.f</a> \ hash counting procedure</li>
+</ul>
+<a id="hash-func"></a><h3>Cryptographic hashes</h3>
+<ul>
+<li>REQUIRE MD5 <a href="../devel/~clf/MD5.F">~clf/MD5.F</a> \ MD5</li>
+<li>REQUIRE MD5 <a href="../devel/~clf/md5-ts.f">~clf/md5-ts.f</a> \ thread safe MD5</li>
+<li>REQUIRE MD5 <a href="../lib/alg/md5-jz.f">lib/alg/md5-jz.f</a> \ MD5</li>
+</ul>
+<a id="compiletime-const"></a><h3>Compile-time constants</h3>
+<ul>
+<li>REQUIRE LOAD-CONSTANTS <a href="../devel/~yz/lib/const.f">~yz/lib/const.f</a> \ including constants - search via W: word prefix</li>
+<li>REQUIRE ADD-CONST-VOC <a href="../lib/ext/const.f">lib/ext/const.f</a> \ including constants - search via NOTFOUND</li>
+<li>REQUIRE BEGIN-CONST <a href="../devel/~day/wincons/compile.f">~day/wincons/compile.f</a> \ *.const files compiler</li>
+<li>\ <a href="../devel/~day/wincons/h2f.f">~day/wincons/h2f.f</a> \ extracting constants from C language header files</li>
+<li>\ <a href="../devel/~yz/cons/">~yz/cons/</a> \ precompiled constants for sql, commctrl, windows</li>
+<li>\ <a href="../devel/~ygrek/lib/data/">~ygrek/lib/data/</a> \ precompiled constants for libcurl, opengl, farplugin</li>
+</ul>
+<a id="ui"></a><h3>User interface</h3>
+<ul>
+<li>REQUIRE 
+  WINDOWS... <a href="../devel/~yz/lib/winlib.f">~yz/lib/winlib.f</a>
+   \ WinLib - Windows GUI interface library. Stretches forms and controls on it. Specifying controls position without coordinates, only position in grid - know-how!
+  
+  
+   
+  <a href="../devel/~yz/prog/winlib"><img src="images/example.png" class="icon">example</a>
+</li>
+<li>REQUIRE through-control <a href="../devel/~profit/lib/winlibex.f">~profit/lib/winlibex.f</a> \ Some extensions to winlib</li>
+<li>REQUIRE FrameWindow <a href="../devel/~day/joop/win/framewindow.f">~day/joop/win/framewindow.f</a> \ windows library based on joop</li>
+<li>\ <a href="../devel/~ac/lib/win/window">~ac/lib/win/window</a> \ simple and small implementation</li>
+<li>REQUIRE 
+ WFL <a href="../devel/~day/wfl/wfl.f">~day/wfl/wfl.f</a>
+  \ windows library based on hype3
+ <a href="../devel/~day/wfl/examples"><img src="images/example.png" class="icon">example</a>
+</li>
+<li>REQUIRE AT-XY <a href="../devel/~day/common/console.f">~day/common/console.f</a> \ minimum words for console</li>
+<li>REQUIRE SetLocate <a href="../devel/~pi/lib/console.f">~pi/lib/console.f</a> \ console support</li>
+</ul>
+<a id="WinCOM"></a><h3>Windows COM</h3>
+<ul>
+<li>REQUIRE ComInit <a href="../devel/~ac/lib/win/com/COM.F">~ac/lib/win/com/COM.F</a> \ basic COM support</li>
+<li>REQUIRE Extends <a href="../devel/~ac/lib/win/com/com_server.f">~ac/lib/win/com/com_server.f</a> \ COM-server</li>
+</ul>
+<a id="services"></a><h3>System services</h3>
+<ul>
+<li>REQUIRE CreateService <a href="../devel/~ac/lib/win/service/SERVICE.F">~ac/lib/win/service/SERVICE.F</a> \ NT services</li>
+<li>REQUIRE InstallService95 <a href="../devel/~ac/lib/win/service/service95.f">~ac/lib/win/service/service95.f</a> \ "services" for Win9x/ME</li>
+</ul>
+<a id="datetime"></a><h3>Date and time</h3>
+<ul>
+<li>REQUIRE DateTime# <a href="../devel/~ac/lib/win/date/date-int.f">~ac/lib/win/date/date-int.f</a> \ date/time in different formats</li>
+<li>REQUIRE UNIXDATE <a href="../devel/~ac/lib/win/date/unixdate.f">~ac/lib/win/date/unixdate.f</a> \ unixdate support</li>
+<li>REQUIRE FileDateTime# <a href="../devel/~ac/lib/win/file/filetime.f">~ac/lib/win/file/filetime.f</a> \ file date/time</li>
+<li>REQUIRE parse-date? <a href="../devel/~ygrek/lib/spec/sdate.f">~ygrek/lib/spec/sdate.f</a> \ S" Tue, 19 Dec 2006 19:55:16 +0300" dates' parsing</li>
+<li>REQUIRE parse-num-unixdate <a href="../devel/~ygrek/lib/spec/sdate2.f">~ygrek/lib/spec/sdate2.f</a> \ S" 2007-01-27T17:40:36+03:00" dates' parsing</li>
+<li>REQUIRE DateTime&gt;Num <a href="../devel/~ygrek/lib/spec/unixdate.f">~ygrek/lib/spec/unixdate.f</a> \ convert unix timestamp into date and back</li>
+</ul>
+<a id="db"></a><h3>Databases</h3>
+<ul>
+<li>REQUIRE StartSQL <a href="../devel/~yz/lib/ODBC.F">~yz/lib/ODBC.F</a> \ ODBC, typed data</li>
+<li>REQUIRE StartSQL <a href="../devel/~ac/lib/win/odbc/ODBC.F">~ac/lib/win/odbc/ODBC.F</a> \ ODBC, all data as strings</li>
+<li>REQUIRE ExecSQLTxt <a href="../devel/~pinka/lib/win/odbc/ODBC-txt.f">~pinka/lib/win/odbc/ODBC-txt.f</a> \ DELETE and UPDATE support for Text File Driver</li>
+<li>REQUIRE db3_open <a href="../devel/~ac/lib/lin/sql/sqlite3.f">~ac/lib/lin/sql/sqlite3.f</a> \ SQLite
+ <a href="http://www.sqlite.org/download.html"><img src="images/wrap.png" class="icon">sqlite3.dll</a>
+</li>
+<li>REQUIRE MyQuery <a href="../devel/~day/lib/mysql.f">~day/lib/mysql.f</a> \ MySQL wrapper
+ <a href="http://dev.mysql.com/downloads/"><img src="images/wrap.png" class="icon">libmysql.dll</a>
+</li>
+</ul>
+<a id="threads"></a><h3>Processes, threads, etc</h3>
+<ul>
+<li>REQUIRE StartApp <a href="../devel/~ac/lib/win/process/process.f">~ac/lib/win/process/process.f</a> \ start applications from command line</li>
+<li>REQUIRE GetProcessACL <a href="../devel/~ac/lib/win/access/nt_access.f">~ac/lib/win/access/nt_access.f</a> \ access rights</li>
+<li>REQUIRE IsapiRunExtension <a href="../devel/~ac/lib/win/isapi/isapi.f">~ac/lib/win/isapi/isapi.f</a> \ support ISAPI-compatible extensions</li>
+<li>REQUIRE CREATE-CP <a href="../devel/~ac/lib/win/thread/pool.f">~ac/lib/win/thread/pool.f</a> \ thread-pool in Win200x</li>
+<li>REQUIRE CREATE-MUTEX <a href="../lib/win/mutex.f">lib/win/mutex.f</a> \ mutexes</li>
+<li>REQUIRE ENTER-CS <a href="../devel/~pinka/lib/multi/critical.f">~pinka/lib/multi/critical.f</a> \ critical sections</li>
+<li>REQUIRE WaitAll <a href="../devel/~pinka/lib/multi/Synchr.f">~pinka/lib/multi/Synchr.f</a> \ threads synchronization - "wait for single", "wait for all"</li>
+</ul>
+<a id="ini-registry"></a><h3>Windows registry and ini-files</h3>
+<ul>
+<li>REQUIRE RG_CreateKey <a href="../devel/~ac/lib/win/registry2.f">~ac/lib/win/registry2.f</a> \ Windows registry</li>
+<li>REQUIRE IniFile@ <a href="../devel/~ac/lib/win/ini.f">~ac/lib/win/ini.f</a> \ ini-files</li>
+</ul>
+<a id="str"></a><h3>Strings</h3>
+<ul>
+<li>REQUIRE STR@ <a href="../devel/~ac/lib/str5.f">~ac/lib/str5.f</a> \ dynamic strings</li>
+<li>REQUIRE BNF <a href="../devel/~ac/lib/transl/BNF.F">~ac/lib/transl/BNF.F</a> \ basic BNF data types</li>
+<li>REQUIRE CHECK-SET <a href="../devel/~day/common/sbnf.f">~day/common/sbnf.f</a> \ simple BNF parser</li>
+<li>REQUIRE WildCMP-U <a href="../devel/~pinka/lib/mask.f">~pinka/lib/mask.f</a> \ comparing string and wildcard mask</li>
+<li>REQUIRE ULIKE <a href="../devel/~pinka/lib/like.f">~pinka/lib/like.f</a> \ comparing string and wildcard mask</li>
+<li>REQUIRE PcreMatch <a href="../devel/~ac/lib/string/regexp.f">~ac/lib/string/regexp.f</a> \ PCRE wrapper
+ <a href="ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/"><img src="images/wrap.png" class="icon">pcre.dll</a>
+</li>
+<li>REQUIRE BregexpMatch <a href="../devel/~ac/lib/string/bregexp/bregexp.f">~ac/lib/string/bregexp/bregexp.f</a> \ bregexp.dll wrapper
+ <a href="http://www.hi-ho.ne.jp/babaq/eng/bregexp.html"><img src="images/wrap.png" class="icon">bregexp.dll</a>
+</li>
+<li>REQUIRE UPPERCASE <a href="../devel/~ac/lib/string/uppercase.f">~ac/lib/string/uppercase.f</a> \ uppercase conversion</li>
+<li>REQUIRE COMPARE-U <a href="../devel/~ac/lib/string/compare-u.f">~ac/lib/string/compare-u.f</a> \ case-ignorant comparison</li>
+<li>REQUIRE GetParam <a href="../devel/~ac/lib/string/get_params.f">~ac/lib/string/get_params.f</a> \ URL-parameters string parser</li>
+<li>REQUIRE SPLIT- <a href="../devel/~pinka/samples/2005/lib/split.f">~pinka/samples/2005/lib/split.f</a> \ dividing string on substring, "inplace" replacing</li>
+<li>REQUIRE replace-str- <a href="../devel/~pinka/samples/2005/lib/replace-str.f">~pinka/samples/2005/lib/replace-str.f</a> \ replacing in strings</li>
+<li>REQUIRE FINE-HEAD <a href="../devel/~pinka/samples/2005/lib/split-white.f">~pinka/samples/2005/lib/split-white.f</a> \ removing spaces at string bounds</li>
+<li>REQUIRE TYPE&gt;STR <a href="../devel/~ygrek/lib/typestr.f">~ygrek/lib/typestr.f</a> \ redirecting whole TYPE output to string</li>
+<li>REQUIRE split <a href="../devel/~profit/lib/bac4th-str.f">~profit/lib/bac4th-str.f</a> \ strings operations via bac4th with automatic memory management</li>
+<li>REQUIRE CEQUAL <a href="../devel/~pinka/spf/string-equal.f">~pinka/spf/string-equal.f</a> \ CEQUAL ( addr1 u1 addr2 u2 -- ? )</li>
+<li>REQUIRE re_match? <a href="../devel/~ygrek/lib/re/re.f">~ygrek/lib/re/re.f</a> \ POSIX regular expressions, native implementation</li>
+</ul>
+<a id="files"></a><h3>Files</h3>
+<ul>
+<li>REQUIRE OPEN-FILE-SHARED-DELETE <a href="../devel/~ac/lib/win/file/share-delete.f">~ac/lib/win/file/share-delete.f</a> \ opening file with "light" shareable access</li>
+<li>REQUIRE LAY-PATH <a href="../devel/~pinka/samples/2005/lib/lay-path.f">~pinka/samples/2005/lib/lay-path.f</a> \ creation of path directories</li>
+<li>REQUIRE ATTACH <a href="../devel/~pinka/samples/2005/lib/append-file.f">~pinka/samples/2005/lib/append-file.f</a> \ safe writing to file</li>
+<li>REQUIRE SPEAK-WITH <a href="../devel/~pinka/samples/2005/ext/tank.f">~pinka/samples/2005/ext/tank.f</a> \ controlling output stream, executing xt with output to file redirection</li>
+</ul>
+<a id="xml"></a><h3>XML</h3>
+<ul>
+<li>REQUIRE XML_Evaluate <a href="../devel/~ac/lib/lin/xml/expat.f">~ac/lib/lin/xml/expat.f</a> \ XML via libexpat
+ <a href="http://sourceforge.net/projects/expat/"><img src="images/wrap.png" class="icon">libexpat.dll</a>
+</li>
+<li>REQUIRE 
+ XML_READ_DOC <a href="../devel/~ac/lib/lin/xml/xml.f">~ac/lib/lin/xml/xml.f</a> \ XML via libxml2 
+ <a href="http://zlatkovic.com/pub/libxml/"><img src="images/wrap.png" class="icon">libxml2.dll</a>
+</li>
+<li>REQUIRE XSLT <a href="../devel/~ac/lib/lin/xml/xslt.f">~ac/lib/lin/xml/xslt.f</a> \ XSLT via libxslt 
+ <a href="http://zlatkovic.com/pub/libxml/"><img src="images/wrap.png" class="icon">libxslt.dll</a>
+</li>
+<li>REQUIRE Tidy <a href="../devel/~ac/lib/lin/tidy/tidy.f">~ac/lib/lin/tidy/tidy.f</a> \ Wrapper for tidy.dll
+ <a href="http://dev.int64.org/tidy.html"><img src="images/wrap.png" class="icon">tidy.dll</a>
+</li>
+</ul>
+<a id="oop"></a><h3>OOP extensions</h3>
+<ul>
+<li>REQUIRE CLASS: <a href="../devel/~day/joop/oop.f">~day/joop/oop.f</a> \ just oop with great pile of examples</li>
+<li>REQUIRE CLASS: <a href="../devel/~af/mc/microclass.f">~af/mc/microclass.f</a> \ microclass</li>
+<li>REQUIRE CLASS: <a href="../devel/~day/mc/microclass.f">~day/mc/microclass.f</a> \ microclass</li>
+<li>REQUIRE CLASS <a href="../devel/~day/hype3/hype3.f">~day/hype3/hype3.f</a> \ Hype 3
+  
+</li>
+</ul>
+<a id="vocs"></a><h3>Vocabularies</h3>
+<ul>
+<li>REQUIRE InVoc{ <a href="../devel/~ac/lib/transl/vocab.f">~ac/lib/transl/vocab.f</a> \ shortening vocabulary manipulations (MODULE: analogue)</li>
+<li>REQUIRE ForEach <a href="../devel/~ac/lib/ns/iterators.f">~ac/lib/ns/iterators.f</a> \ iterators for context vocabularies</li>
+<li>REQUIRE ForEach-Word <a href="../devel/~pinka/lib/Words.f">~pinka/lib/Words.f</a> \ ForEach-Word</li>
+<li>REQUIRE QuickSWL-Support <a href="../devel/~pinka/spf/quick-swl2.f">~pinka/spf/quick-swl2.f</a> \ Quick Search Wordlist (due to hashing)</li>
+<li>REQUIRE DLOPEN <a href="../devel/~ac/lib/ns/dlopen.f">~ac/lib/ns/dlopen.f</a> \ unix-compatible way of loading WindowsDLL/UnixSO</li>
+<li>\ <a href="../devel/~ac/lib/ns/">~ac/lib/ns/</a> \ mapping external tree structures on forth wordlist (XML, files and dirs, sqlite)</li>
+</ul>
+<a id="mem"></a><h3>Memory</h3>
+<ul>
+<li>REQUIRE STACK_MEM <a href="../devel/~ac/lib/memory/mem_stack.f">~ac/lib/memory/mem_stack.f</a> \ "stack"-way memory allocation</li>
+<li>REQUIRE LowMemory? <a href="../devel/~ac/lib/memory/low_memory.f">~ac/lib/memory/low_memory.f</a> \ controlling extra memory consumption</li>
+<li>REQUIRE PAllocSupport <a href="../devel/~af/lib/pallocate.f">~af/lib/pallocate.f</a> \ allocating memory in the global process space (shareable between threads)</li>
+<li>REQUIRE LOCALLOC <a href="../devel/~mak/LALLOC.F">~mak/LALLOC.F</a> \ local array allocation (on the return stack)</li>
+<li>REQUIRE ALLOCATE2 <a href="../devel/~pinka/spf/mem2.f">~pinka/spf/mem2.f</a> \ switching memory words for process and thread heap</li>
+<li>REQUIRE LoadDelphiMM <a href="../devel/~ss/lib/borlndmm.f">~ss/lib/borlndmm.f</a> \ Borland memory manager</li>
+<li>REQUIRE INIT-TASK-VALUES <a href="../devel/~ss/lib/task-values.f">~ss/lib/task-values.f</a> \ global thread variables</li>
+<li>REQUIRE PROTECT-RETURN-STACK <a href="../devel/~ss/ext/stack-guard.f">~ss/ext/stack-guard.f</a> \ protecting return stack from erasing with data stack</li>
+<li>REQUIRE GMEM <a href="../devel/~yz/lib/gmem.f">~yz/lib/gmem.f</a> \ global memory shareable between threads</li>
+</ul>
+<a id="misc"></a><h3>Miscellaneous</h3>
+<ul>
+<li>REQUIRE CONST <a href="../devel/~micro/lib/const/CONST.F">~micro/lib/const/CONST.F</a> \ constants enumeration</li>
+<li>REQUIRE ENUM <a href="../devel/~ygrek/lib/enum.f">~ygrek/lib/enum.f</a> \ enumerate groups of similar words</li>
+<li>REQUIRE enqueueNOTFOUND <a href="../devel/~pinka/samples/2006/core/trans/nf-ext.f">~pinka/samples/2006/core/trans/nf-ext.f</a> \ extending translators (NOTFOUND)</li>
+<li>REQUIRE StringToCB <a href="../devel/~day/lib/clipboard.f">~day/lib/clipboard.f</a> \ read/write strings from Windows-Clipboard</li>
+</ul>
+<a id="encoding"></a><h3>Encodings</h3>
+<ul>
+<li>REQUIRE UNICODE&gt;UTF8 <a href="../devel/~ac/lib/win/com/COM.F">~ac/lib/win/com/COM.F</a> \ convertation from Unicode (2 byte) to UTF-8 and reverse</li>
+<li>REQUIRE unicode&gt; <a href="../devel/~day/lib/unicode.f">~day/lib/unicode.f</a> \ convertation from Unicode to ANSI and reverse</li>
+<li>REQUIRE utf8Decode <a href="../devel/~profit/lib/utf8.f">~profit/lib/utf8.f</a> \ convertation from UTF-8 to Unicode (2 byte). Doesn't use WINAPI's functions</li>
+<li>REQUIRE debase64 <a href="../devel/~ac/lib/string/CONV.F">~ac/lib/string/CONV.F</a> \ base64, win-koi, urlencode etc.</li>
+<li>REQUIRE iconv: <a href="../devel/~ygrek/lib/iconv.f">~ygrek/lib/iconv.f</a> \ libiconv wrapper
+ <a href="http://www.zlatkovic.com/pub/libxml/"><img src="images/wrap.png" class="icon">libiconv.dll</a>
+</li>
+<li>REQUIRE ICONV <a href="../devel/~ac/lib/lin/iconv/iconv.f">~ac/lib/lin/iconv/iconv.f</a> \ libiconv wrapper</li>
+</ul>
+<hr>
+<p><em>Used icons from <a href="http://tango.freedesktop.org/Tango_Icon_Library">Tango project</a></em></p>
+</td></tr></table></div></body>
+</html>

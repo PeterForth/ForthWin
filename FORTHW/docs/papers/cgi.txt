@@ -1,0 +1,58 @@
+  
+
+(CGI in SPF / 3.73. A.Cherezov 03/03/2000)
+
+At SPF, it was always possible to develop CGI (and in Eserv's Erobot this
+was actively used in FIS / CGI of the 96th year too :), but at the same time 
+it was required to slightly modify the startup sequence 
+run SPF. SPF / 3.x itself did not recognize the launch situation.
+in CGI mode. With version 3.73 it has become easier - you do not need to change MAINX,
+no need to check "CGI / nonCGI", etc.
+
+The way to run SPF-CGI scripts is the same as in the case of 
+Perl and PHP. For example, to customize the launch of * .spf files
+as CGI in Eserv / 2.x, it is enough to specify in the ScriptHandlers section
+spf handler:
+
+ScriptHandlers:
+.php3 c: \ php \ php4 \ php.exe
+.fis fis.exe
+.cgi perl.exe
+.pl perl.exe
+.html InterpretHtml
+.spf C: \ spf \ spf373.exe
+
+The path can be omitted if c: \ spf \ is in PATH.
+
+In the browser, calls to the script are made in the form:
+
+http: //server/path/file.spf
+or
+http: //server/path/file.spf? name1 = value1 & name2 = value2 & etc
+or from HTML form
+<form action = http: //server/path/file.spf>
+<input name = name1 value = value1>
+etc
+</ form>
+
+The server will start SPF373.exe with the command line:
+C: \ spf \ spf373.exe file.spf
+
+Parameters are passed in the QUERY_STRING environment variable.
+(can they be accessed by calling S "QUERY_STRING" ENVIRONMENT?)
+
+If the launch is done from a form 
+<form action = http: //server/path/file.spf method = POST>
+then the parameters will not be in QUERY_STRING, but in the input stream.
+The current directory will be the directory where file.spf is located.
+
+All this does not depend on the server, because this is the CGI specification
+equally implemented in all servers.
+
+Also, in accordance with the CGI, the script must first issue
+http headers At least Content-Type. Simplest example
+script:
+--------------- words.spf ------------
+. (Content-Type: text / plain) CR CR
+WORDS
+------------------------------------
