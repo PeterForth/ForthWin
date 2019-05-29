@@ -1,0 +1,30 @@
+Изменения относительно текущих версий этих же либ в devel/~yz
+
+ODBC.F
+[+] SQL_MESSAGE
+[+] DisconnectSQL
+
+
+wincc.f
+[+] hide-selected-tab
+[+] show-selected-tab
+[*] tabcontrol-notify
+[+] switch-tab
+[+] set-tooltip-delay
+
+
+winctl.f
+[+] generic-edit
+[+] password-edit
+[*] max-win-size - выключил обрезание размеров
+[+] INITMODAL SHOWMODAL LOOPMODAL HIDEMODAL
+[*] ...MODAL  0 TO dialog-termination
+[*] выделил сетки в отдельный файл wingrid.f
+
+
+winlib.f
+[*] REQUIRE LOAD-CONSTANTS ~yz/lib/wincons.f - W: конфликтует часто, результат - либа не грузится
+[*] выделил win-независимую часть в wincore.f
+
+wingrid.f
+[*] слово row-pass1 - Добавлено обнуление пары полей таблиц сеток (in4)
