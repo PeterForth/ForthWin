@@ -1,0 +1,29 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+<link rel="stylesheet" href="forth.css" type="text/css">
+<title>Процедуры</title>
+</head>
+
+<body background="pic/grid.gif">
+
+<h1 class=lib><u>proc.f</u>
+&nbsp;Процедуры
+</h1>
+
+Исполняемые слова, по умолчанию не запускающиеся, а только возвращающие
+свой адрес. Удобны для объявления различного рода обработчиков, например
+для обработчиков событий <a href="comevents.html">Comevents</a>. 
+</p>
+
+<u>PROC:</u> name<i>( ->bl; -- )</i>
+<p>Вспомогательное слово: начинает компиляцию определения слова name.
+Полученное слово name при вызове вернет свой адрес xt. 
+</p>
+
+<u>PROC;</u> <i>( -- )</i>
+<p>Завершает определение, начатое словом <u>PROC:</u>
+</p>
+
+</html>

@@ -1,0 +1,35 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+<link rel="stylesheet" href="forth.css" type="text/css">
+<title>Форматный вывод</title>
+</head>
+
+<body background="pic/grid.gif">
+
+<h1 class=lib><u>api.f</u>
+&nbsp;Быстрое описание системных функций
+</h1>
+
+Поскольку для любой типичной программы 90% внешних функций, вызываемых из
+динамических библиотек, приходится на три стандартные библиотеки Windows,
+имеет смысл упростить вызов, введя в дополнение к слову <u>WINAPI:</u>
+следующие слова:
+
+<br><br>
+<u>KERNEL32:</u> <i>( ->bl; -- )</i>
+<br><br>
+<u>USER32:</u> <i>( ->bl; -- )</i>
+<br><br>
+<u>GDI32:</u> <i>( ->bl; -- )</i>
+
+<div>
+Пример<br>
+<tt>
+<br>USER32: CreateMenu
+<br>KERNEL32: GlobalAlloc
+</tt>
+</div>
+
+</html>

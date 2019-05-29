@@ -1,0 +1,30 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+<link rel="stylesheet" href="forth.css" type="text/css">
+<title>Bindata</title>
+</head>
+
+<body background="pic/grid.gif">
+
+<h1 class=lib><u>bindata.f</u>
+&nbsp;Загрузка в словарь двоичных данных
+</h1>
+
+<u>BINDATA</u> name<i>( ->bl; a n -- )</i>
+<p>Определяет слово <i>name</i> и загружает в него содержимое файла с указанным
+именем.
+</p>
+
+<div class="e">
+<font color=gray>Пример</font>
+<br>
+<tt>
+S" tables.bin" BINDATA tbl
+<br>tbl 20 DUMP
+</tt>
+</div>
+
+
+</html>

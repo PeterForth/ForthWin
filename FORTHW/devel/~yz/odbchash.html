@@ -1,0 +1,77 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+<link rel="stylesheet" href="forth2.css" type="text/css">
+<title>Доступ к базам данных с помощью хэш-таблиц</title>
+</head>
+
+<body background="pic/grid.gif">
+ <h1 class=lib><u>odbchash.f</u>
+ &nbsp;Доступ к базам данных с помощью хэш-таблиц
+ </h1>
+
+
+
+<p>Эта библиотека расширяет <a href="odbc.html">odbc.f</a>, добавляя 
+чтение и запись данных с помощью расстановочных таблиц. В ней 
+дополнительно определены следующие слова:
+<br><br>
+
+
+<DIV class=word>
+<u>BIND-HASH</u> <i>( hash -- )</i>
+<br>
+
+Связывает указанную хэш-таблицу с набором данных, полученным в результате 
+последнего запроса словом <i>ExecuteSQL</i>. Связывание заключается в том, 
+что в хэше создается по две записи на каждое поле данных. Первая запись 
+носит то же имя, что и поле данных, вторая запись - такое же имя с 
+добавленным знаком "#". В первой записи хранится ASCIIZ-строка, представляющая 
+содержание поля, во второй - длина поля.
+</DIV>
+
+
+<DIV class=word>
+<u>UNBIND-HASH</u> <i>( -- )</i>
+<br>
+
+Разрывает связывание хэш-таблицы с набором данных. Содержимое хэша при 
+этом не очищается.
+</DIV>
+
+
+<DIV class=word>
+<u>insert-hash</u> <i>( table-name hash fodbc -- ior )</i>
+<br>
+
+Добавляет все содержимое хэша в указанную таблицу. В хэше могут храниться 
+как строки, так и числа. Имена полей берутся из ключей хэша.
+</DIV>
+
+
+<code>
+<pre>
+<kbd>\ Пример чтения данных</kbd>
+0 VALUE database
+small-hash TO h
+StartSQL . TO database
+S" реклама" 0 0 0 0 database ConnectSQL SQL_OK? .
+" SELECT * from firms" database ExecuteSQL ?sql-error
+h BIND-HASH
+  database NextRow DROP
+  S" contact" h HASH@Z .ASCIIZ
+  S" contact#" h HASH@ .
+UNBIND-HASH
+
+<kbd>\ Пример записи данных</kbd>
+S" number" 1010 h HASH!N
+" Максимиллиан" S" surname" h HASH!Z
+S" Флаг" 1 h HASH!N
+" 543.56" S" sum" h HASH!Z
+" Это просто примечание" S" note" h HASH!Z
+" ticket" h database insert-hash SQL_OK? .
+</pre>
+</code>
+</html>
+

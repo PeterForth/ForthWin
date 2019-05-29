@@ -1,0 +1,38 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+<link rel="stylesheet" href="forth.css" type="text/css">
+<title>Вставка кода инлайном</title>
+</head>
+
+<body background="pic/grid.gif">
+
+<h1 class=lib><u>inline.f</u>
+&nbsp;Вставка кода инлайном
+</h1>
+
+<p>Иногда требуется куда-то передать xt, но заводить для этого лишнее 
+слово не хочется. Предлагаемые слова позволяют вставить код прямо в 
+текущее слово.
+</p>
+
+<u>(:</u> <i>( компиляция: -- adr ref id; интерпретация: -- )</i>
+<p>Начать компиляцию инлайна.
+</p>
+
+<u>;)</u> <i>( компиляция: adr ref id --; интерпретация: -- xt )</i>
+<p>Закончить компиляцию инлайна и вернуть его xt.
+</p>
+
+<div class=e><pre><tt>
+REQUIRE (:     ~yz/lib/inline.f
+REQUIRE button ~yz/lib/winctl.f
+
+: make-button ( -- ctl )
+  " Hello" button 
+  (: " Привет!" msg ;) this -command! ;
+</tt></pre>
+</div>
+
+</html>

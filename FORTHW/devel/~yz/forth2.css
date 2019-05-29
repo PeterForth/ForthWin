@@ -1,0 +1,137 @@
+BODY {
+ font-family: "Arial","Helvetica",sans-serif;
+ font-size: 11pt;
+ text-align: justify;
+ margin-left: 2em;
+ margin-right: 2em;
+}
+
+P {
+ text-indent: 2em;
+}
+
+DIV.word {
+  margin-bottom: 1em;;
+}
+
+DIV.toc {
+  background: rgb(200,250,240);
+  margin-bottom: 1em;
+}
+
+DIV.comment {
+  margin-bottom: 1em;
+  font-style: italic;
+}
+
+H1 {
+ font-size: 14pt;
+ color: white;
+ background: blue;
+ font-weight: bold;
+ text-indent: 0.5em;
+ padding-bottom: 0.5em;
+}
+
+H2 {
+ margin-top: 2em;
+ font-size: 12pt;
+ color: blue;
+}
+
+H3 {
+ margin-top: 1.5em;
+ font-size: 11pt;
+ color: rgb(70,20,100);
+}
+
+U {
+ color: rgb(240,0,50);
+ font-weight: bold;
+ text-decoration: none;
+}
+
+I {
+ font-style: normal;
+ color: rgb(30,130,130);
+}
+
+TT {
+ font-weight: bold;
+ font-family: monotype;
+}
+
+TABLE {
+ font-size: 12pt;
+}
+
+CODE {
+  display: block;
+  background: rgb(250,250,220);
+  font-family: monospace;
+  font-weight: bold;
+  border: none;
+  white-space: pre;
+  padding: 0;
+  margin-top: 0;
+  margin-bottom: 1em;
+  width: 90%;
+}
+
+KBD {
+ color: rgb(150,150,150);
+}
+
+TABLE.st {
+ border: solid black 1pt;
+ width: 100%;
+ margin-top: 1em;
+ margin-bottom: 1em;
+}
+
+TH.st {
+ border: solid black 1pt;
+ background: rgb(207,250,225);
+ text-align: left;
+ font-size: 12pt;
+ font-weight: bold;
+ padding-bottom: 0.5em;
+}
+
+TD.st1 {
+  border: solid black 1pt;
+  width: 20%;
+  background: rgb(230,250,180);
+  font-weight: bold;
+  font-size: 11pt;
+  text-indent: 0.5em;
+}
+
+TD.st1def {
+  border: solid black 1pt;
+  width: 20%;
+  background: rgb(230,250,180);
+  font-weight: bold;
+  font-size: 11pt;
+  text-indent: 0.5em;
+  color: blue;
+}
+
+TD.st2 {
+  border: solid rgb(70,70,70) 1pt;
+  width: 80%;
+  background: rgb(245,245,200);
+  font-weight: normal;
+  font-size: 11pt;
+  text-indent: 0.5em;
+}
+
+SPAN.when {
+ color: white;
+ font-weight: bold;
+ background: rgb(30,30,150);
+}
+
+P.err {
+  text-indent: 0em;
+}

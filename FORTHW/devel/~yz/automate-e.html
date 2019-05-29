@@ -1,0 +1,334 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ascii">
+<link rel="stylesheet" href="forth.css" type="text/css">
+<title>Automation servers client</title>
+</head>
+
+<body background="pic/grid.gif">
+
+<h1 class=lib><u>automate.f</u>
+&nbsp;Automation servers client
+</h1>
+
+<font size="2">
+<a href="automate-e.html#run">1. How to start and stop a server</a>
+<br><a href="automate-e.html#methods">2. Access to methods and properties</a>
+<br><a href="automate-e.html#foreach">3. Looping through collection</a>
+<br><a href="automate-e.html#eg">4. Examples</a>
+</font>
+
+<br><br><br>
+<p>Note: All words in library work with asciiz-strings, i.e. strings ended with zero character.
+The word <u>"</u> to define such strings, is loaded from <a href="lib/common.f">common.f</a>.
+</p>
+
+<a name=run></a>
+<h1>1. How to start and stop a server</h1>
+
+<u>ComInit</u> <i>( -- error )</i>
+<p>Initializes the Windows COM subsystem in multithreaded mode. Returns 0 if
+initialization has succeeded and an error code otherwise.
+</p>
+
+<u>ComDestroy</u> <i>( -- )</i>
+<p>
+Unloads the COM subsystem.
+</p>
+
+<u>CreateObject</u> <i>( ProgId -- object 0 / error)</i>
+<p>
+Starts an automation server, creates an object <i>ProgId</i>
+and returns the address of its interface IDispatch.
+</p>
+
+<u>GetObject</u> <i>( ProgId -- object 0 / error)</i>
+<p>
+Connects to an already running server and returns the address of 
+<i>ProgId</i> object.
+</p>
+
+<u>?CreateObject</u> <i>( ProgId -- object 0 / error)</i>
+<p>
+Tries to connect to an already running server. If it is failed, starts the
+server with <u>CreateObject</u>.
+</p>
+
+<u>ObjectFromFile</u> <i>( filename -- object 0 / error)</i>
+<p>
+Starts a server which created a document <i>filename</i>, loads this document
+and returns the address of the document as an object.
+</p>
+<div class=e>
+\ Start MS Word, loads "Declaration" into it and returns its address
+<br>
+<tt>" c:/My Documents/Declaration of Independance.doc" ObjectFromFile</tt>
+</div>
+
+<u>release</u> <i>( object -- )</i>
+<p>
+Releases an obect. In theory, if the object was created with <u>CreateObject</u>,
+it must unload itself from memory. In practice, to count all references is a very
+non-trivial business. So, it will be better if before a <u>release</u> call you
+will explicitly stop an object with its appropriate method (usually, it's "Quit").
+</p>
+
+<a name=methods></a>
+<h1>2. Access to methods and properties</h1>
+
+Access to methods and properties is made with universal call which gets
+address of the IDispatch object and return result of method call or property
+value, if applicable. Formally, the call has the following form (forth words colored red,
+square brackets mean that the element may be omitted, curly brackets signify
+repetition one or more times):
+<br><br>
+<b>Method call/property access:</b><br>
+<u>[[</u> { <i>method_or_property_name</i> [<i>list_of_arguments_or_indices</i>] } [<u>*</u>] <u>]]</u>
+<br><br>
+<b>Property setting:</b><br>
+<u>[[</u> { <i>method_or_property_name</i> [<i>list_of_arguments_or_indices</i>] } <u>=</u> <i>value</i> <u>]]</u>
+<p>
+The universal call traverses a chain of names, sequentally calling given objects
+and automatically releasing already unneeded, then performs the needed operation and 
+leaves on data stack its result if it exists.
+<p>
+The library calling a server simultaneously sets "method" and "property" flags, even
+if it is known that a method is needed. Automation servers usually are prepared
+to this and return a correct result. But some servers (e.g. MS Word) think that
+they are more clever than a programmer and signal an error DISP_E_TYPEMISMATCH.
+If you work with such a server, just note your call with a star <u>*</u>
+(see example in <a href="prog/automate/word2.f">word2.f</a>, method SaveAs).
+</p>
+<p>Method_or_property name usually is known at compilation stage and may 
+be expressed just as string. For some applications (e.g. while using SOAP) 
+names are unknown beforehand and may be obtained only at run time. In such cases you can 
+use any expression returning Forth string ( a n) with words <u>{</u> and <u>}</u>.
+<div class=e>
+<tt>word [[ Name ]] .ASCIIZ</tt>
+<br>is equal to
+<br>
+<tt>word [[ { S" Name" } ]] .ASCIIZ</tt>
+</div>
+</p>
+
+
+<b>List_of_arguments</b> is a list of values delimited by commas:
+<br><u>(</u> <i>value</i> <u>,</u> <i>value</i> <u>,</u> <i>value</i> ...<u> )</u>
+<p>Type of value is defined as follows:
+<ul>
+<li>any expression left on data stack just one value will be marked as <b>_cell</b>;
+<li>string literals are limited by quotes and look traditionally:
+<i>"&nbsp;&nbsp;Example"</i>;
+<li>empty string denoted with <u>""</u> word;
+<li>expressions returned forth strings in ( -- a u) format must be marked
+with word <u>STRING</u> <i>( a u -- )</i> (ã must be less than or equal to 255);
+<li>expressions returned zero-ended strings ( -- z), must be marked with
+word <u>ASCIIZ</u> <i>( z -- )</i>;
+<li>logical values are denoted with words <u>TRUE</u> and <u>FALSE</u>;
+<li>expressions returning any objects including IDispatch,
+are marked with word <u>OBJECT</u> <i>( obj -- )</i>. See an example in <a href="prog/automate/shell2.f">shell2.f</a>;
+<li>Date literals may be expressed as string literals and converted with
+word <u>>DATE</u> <i>( z _str --)</i>. E.g. <i>" 26.08.72" >DATE</i>;
+<li>integers are converted into currency type (<b>_currency</b>) with word
+<u>$</u> <i>( n -- )</i>. E.g. <i>15 $</i>;
+<li><u>NIL</u> denotes a missing argument; if a server lets to omit some
+arguments, it will replace it with default value.
+<li>any other expressions muts left two or three values on data stack.
+The topmost will be regarded as a type, the rest as argument value.
+If more than three values will be found on stack, an error DISP_E_BADVARTYPE
+will be raised.
+</ul>
+<p>Warning: stack depth at execution point where values are being computed is unknown and 
+may vary from call to call. So it is impossible to pass arguments through data
+stack. Use return stack, variables or any other appropriate method.
+
+<p>
+Arguments for calling any method go in natural order - such as a documentation for object tells.
+</p>
+
+<div class=e>
+For example, a method of Microsoft Word <i>OnTime</i> needs an arguments list
+(When, Name, Tolerance), where When and Name are strings, Tolerance is integer.
+Then method call may be as follows:
+<br><br>
+<tt>
+[[ OnTime ( " 12:00" , " WakeUp()" , 0 ) ]]
+</tt>
+</div>
+
+<p>
+Result returned by method or value of appropriate property is returned by
+word <u>]]</u>, and its type is saved in value variable <u>LAST-TYPE</u>.
+Value may occupy one or two cells depenfing on its type. The following types
+are defined:
+<br><br>
+<table width=100%>
+
+<tr>
+
+<td width=10%>
+<tt>_empty</tt>
+
+<td width=30%>
+No value
+
+<td width=10%>
+<tt>_char, _ui1</tt>
+<td width=30%>
+Byte
+
+<tr>
+
+<td width=10%>
+<tt>_int, _cell</tt>
+<td width=30%>
+Integer
+
+<td width=10%>
+<tt>_word, _i2</tt>
+<td width=30%>
+Two-byte word
+
+<tr>
+
+<td width=10%>
+<tt>_float, _r4</tt>
+<td width=30%>
+Float number
+
+<td width=10%>
+<tt>_double, _r8</tt>
+<td width=30%>
+Float number of double precision (two cells)
+
+<tr>
+<td width=10%>
+<tt>_bool</tt>
+<td width=30%>
+Logical value TRUE/FALSE
+
+<td width=10%>
+<tt>_currency </tt>
+<td width=30%>
+Currency format (two cells)
+
+<tr>
+
+<td width=10%>
+<tt>_date</tt>
+<td width=30%>
+Date (two cells)
+
+<td width=10%>
+<tt>_str</tt>
+<td width=30%>
+asciiz string in ANSI coding
+
+<tr>
+
+<td width=10%>
+<tt>_obj</tt>
+<td width=30%>
+Object exposing the automation interface (IDispatch)
+
+<td width=10%>
+<tt>_unk</tt>
+<td width=30%>
+Object exposing the IUnknown interface
+
+</table>
+
+<p>Memory for strings returned as a property or a method result is
+<u>ALLOCATE</u>d, so later you must <u>FREE</u> it after using.
+Returned objects with <i>_obj</i> and <i>_unk</i> types must be released
+with word <u>release</u>.
+
+<p>If a called method returns nothing or a property was set, <u>]]</u>
+returns nothing and <u>LAST-TYPE</u> takes <b>_empty</b> type.
+Be careful: many servers (e.g. MS Excel) have a habit to return some values
+even if manual says that no value returned. For example, <i>Range.Select</i>
+and many other Excel method return a logical value, indicating obviously
+success or failure. From the other side, such innocent call as a getting 
+of value from spreadshet cell may return value of any type or nothing if
+the cell was empty.
+
+</p>
+<u>?AUERROR</u> vector
+<br><i>( 0 / error -- )</i>
+
+<p>
+This vector keeps an address of a word processing errors which may be raised
+during access to the object. This word receives one value - <i>error</i> code or zero
+if call was successfull. Standard word write information about error to console and
+<u>ABORT</u>ed.
+</p>
+
+<a name=foreach></a>
+<h1>3. Looping through collection</h1>
+
+<i>( object -- )</i> <u>FOREACH</u> .. <u>NEXT</u>
+
+<p>
+Loop through <i>object</i> collection. If this <i>object</i> is not a collecion,
+the loop does not run. 
+<u>FOREACH</u>..<u>NEXT</u> leaves on return stack some data, so inside it you must
+obey the same rules as inside <u>DO</u>..<u>LOOP</u>. Doesn't work in interpretation mode.
+</p>
+
+<u>OBJ-I</u> <i>( -- val)</i>
+<p>
+Returns a current object from collection and saves its type in <u>LAST-TYPE</u>.
+After using the object must be freed with <u>release</u>.
+</p>
+
+<div class=e>
+<tt>documents FOREACH
+<br>  OBJ-I DUP [[ Name ]] DUP .ASCIIZ FREEMEM</tt> \ we use a received string...
+<br>  <tt>release</tt> \ release a reference made by OBJ-I
+<br><tt>  OBJ-I DUP [[ Creator ]] DUP .ASCIIZ FREEMEM
+<br>  release </tt>\ release this reference too
+<br>  \ Generally, if an object will be used many times, the simplest method is
+<br>  \ to call OBJ-I, save a reference in some variable and then to release it when unneeded.
+<br><tt>NEXT
+</tt></div>
+
+<u>OBJ-J</u> <i>( -- val)</i>
+<p>
+Current object of outer loop <u>FOREACH</u>..<u>NEXT</u>. Similar to <u>J</u>.
+</p>
+
+<u>LEAVE-FOREACH</u>
+<p>
+Breaks a loop <u>FOREACH</u>..<u>NEXT</u>. Similar to <u>LEAVE</u>.
+</p>
+
+<u>collection?</u> <i>( object -- ? )</i>
+<p>
+Returns true if an object is a collection.
+</p>
+
+<a name=eg></a>
+<h1>4. Examples</h1>
+
+<table border=0 align=left width=50%>
+<tr align=center>
+<td>
+<a href="prog/automate/word2.f">
+<img src="pic/spf.gif" border=0 alt="word.f"></a>
+<td>
+<a href="prog/automate/excel2.f">
+<img src="pic/spf.gif" border=0 alt="excel.f"></a>
+<td>
+<a href="prog/automate/shell2.f">
+<img src="pic/spf.gif" border=0 alt="shell.f"></a>
+<tr align=center>
+<td>
+<a href="prog/automate/word2.f">word2.f</a>
+<td>
+<a href="prog/automate/excel2.f">excel2.f</a>
+<td>
+<a href="prog/automate/shell2.f">shell2.f</a>
+</table>
+
+</html>

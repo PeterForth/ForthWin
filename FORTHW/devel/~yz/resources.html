@@ -1,0 +1,67 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+<link rel="stylesheet" href="forth.css" type="text/css">
+<title>Подключение ресурсов</title>
+</head>
+
+<body background="http://www.forth.org.ru/~yz/grid.gif">
+
+<h1 class=lib><u>resources.f</u>
+&nbsp;Подключение двоичных ресурсов
+</h1>
+
+<u>RESOURCES:</u> <i>( ->eol; -- )</i>
+<p>Подключает к сохраняемой программе файл ресурсов в специальном двоичном формате.
+Файл такого формата можно получить из файла .res, создаваемого
+компилятором ресурсов, с помощью программы <a href="index.html#fres">FRES.EXE</a>. Обратите внимание:
+ресурсы, прилинкованные словом <u>RESOURCES:</u>, затирают иконки,
+прилинкованные словом <u>ICONS:</u>, и наоборот.
+</p>
+
+
+<div class="e">
+<font color=gray>Пример</font>
+<br><br>
+<tt>
+<i>PROG.RC</i><br>
+cat   ICON cat.ico<br>
+mouse ICON mouse.ico<br>
+dog   ICON dog.ico<br>
+<br>
+STRINGTABLE<br>
+BEGIN<br>
+&nbsp;&nbsp;1,"Мог бы как птичка на ветке петь"<br>
+&nbsp;&nbsp;2,"Мог бы как жаба в болоте квакать"<br>
+&nbsp;&nbsp;3,"Так нет, твою мать, я человек"<br>
+&nbsp;&nbsp;4,"Хожу как дурак на задних лапах"<br>
+END<br>
+<br><br>
+<i>PROG.F</i>
+<br>REQUIRE ~yz/lib/resources.f
+<br>
+<br>WINAPI: LoadIconA   USER32.DLL
+<br>WINAPI: LoadStringA USER32.DLL
+<br>: main 
+<br>&nbsp; S" mouse" DROP IMAGE-BASE LoadIconA .
+<br>&nbsp; 100 HERE 3 IMAGE-BASE LoadStringA ;
+<br>
+<br>0 TO SPF-INIT?
+<br>TRUE TO ?GUI
+<br>' main MAINX !
+<br>
+<br>RESOURCES: prog.fres
+<br>S" prog.exe" SAVE
+<br>
+<br><i>Компиляция</i>
+<br>RC prog.rc
+<br>FRES prog.res
+<br>SPF4 prog.f
+</tt>
+</div>
+
+<p>Те, кто для компиляции ресурсов предпочитают пользоваться программой
+WINDRES.EXE от cygwin, могут для загрузки ресурсов в формате COFF применять <a href="lib/coffresources.f">coffresources.f</a>
+
+</html>

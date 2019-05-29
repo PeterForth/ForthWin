@@ -1,0 +1,160 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+<link rel="stylesheet" href="forth2.css" type="text/css">
+<title>Работа с записями</title>
+</head>
+
+<body background="pic/grid.gif">
+
+ <h1 class=lib><u>record.f</u>
+ &nbsp;Работа с записями
+ </h1>
+
+
+
+<p>Упрощенная работа с записями. Описанные поля ведут себя примерно как 
+переменные VALUE, то есть для доступа к ним не нужно слово <u>@</u>.
+<br><br>
+
+<DIV class=word>
+<u>RECORD:</u> <i>( ->bl; -- a off )</i>
+<br>
+
+Начать описание новой записи. Имя записи станет константой, возвращающей 
+длину записи в байтах.
+</DIV>
+
+
+<DIV class=word>
+<u>RECORDEX:</u> <i>( ->bl; off1 -- a off2 )</i>
+<br>
+
+Начинает описание новой записи, в которую в начале входит старая запись. 
+На стеке передается размер старой записи.
+</DIV>
+
+
+<DIV class=word>
+<u>RECORD;</u> <i>( a off -- )</i>
+<br>
+
+Завершает описание записи.
+</DIV>
+
+
+<DIV class=word>
+<u>RECORDEX;</u> <i>( a off -- )</i>
+<br>
+
+То же, что и <u>RECORD;</u>. Введено для удобства.
+</DIV>
+
+
+<DIV class=word>
+<u>cell</u> <i>( ->bl; off1 -- off2  )</i>
+<br>
+
+Описывает поле длиной в ячейку. Синонимы <u>DWORD</u>, 
+<u>HWND</u>, <u>INT</u>, <u>UINT</u>, <u>LPSTR</u>, <u>HICON</u> введены 
+для удобства переделки заголовочных файлов С.
+</DIV>
+
+
+<DIV class=word>
+<u>word</u> <i>( ->bl; off1 -- off2  )</i>
+<br>
+
+Описывает поле длиной в 16-разрядное слово. Синоним: <u>_WORD</u>.
+</DIV>
+
+
+<DIV class=word>
+<u>byte</u> <i>( ->bl; off1 -- off2  )</i>
+<br>
+
+Описывает поле длиной в ячейку. Синоним: <u>BYTE</u>.
+</DIV>
+
+
+<DIV class=word>
+<u>bytes</u> <i>( ->bl; off1 n -- off2  )</i>
+<br>
+
+Описывает поле-массив длиной в <i>n</i> байтов. Полученное поле будет 
+всегда возвращать свой адрес, независимо от предшествующих слов <u>=></u> 
+и <u>AT</u>. Синоним: <u>TCHAR</u>.
+</DIV>
+
+
+<DIV class=word>
+<u>POINT</u> <i>( ->bl; off1 -- off2  )</i>
+<br>
+
+Поле в 8 байтов. Для упрощения описания соответствующего типа Windows.
+</DIV>
+
+
+<DIV class=word>
+<u>RECT</u> <i>( ->bl; off1 -- off2  )</i>
+<br>
+
+Поле в 16 байтов.
+</DIV>
+
+
+<DIV class=word>
+<u>GUID</u> <i>( ->bl; off1 -- off2  )</i>
+<br>
+
+Поле в 16 байтов.
+</DIV>
+
+
+<DIV class=word>
+<u>=></u> <i>(  n --  )</i>
+<br>
+
+Вызов следующего поля сработает как занесение значения в это поле.
+</DIV>
+
+
+<DIV class=word>
+<u>AT</u> <i>(  --  )</i>
+<br>
+
+Вызов следующего поля сработает как запрос на адрес этого поля.
+</DIV>
+
+
+<code>
+<pre>
+RECORD: #osversioninfo
+  DWORD :vOSVersionInfoSize
+  DWORD :vMajorVersion 
+  DWORD :vMinorVersion
+  DWORD :vBuildNumber 
+  DWORD :vPlatformId 
+  128 TCHAR :vCSDVersion
+RECORD;
+
+WINAPI: GetVersionExA KERNEL32.DLL
+
+: OSver
+  #osversioninfo => HERE :vOSVersionInfoSize
+  HERE GetVersionExA .
+  HERE :vMajorVersion .
+  HERE :vMinorVersion .
+  HERE :vBuildNumber .
+  HERE :vPlatformId  .
+  HERE :vCSDVersion ASCIIZ> TYPE
+;
+
+OSver
+</pre>
+</code>
+
+</body>
+</html>
+
