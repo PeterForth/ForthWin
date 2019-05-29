@@ -1,0 +1,19 @@
+SP-FORTH - ANS FORTH 94 for Win95/98/Me/NT/2k/XP/Vista
+Open source project at http://spf.sf.net
+Russian FIG at http://www.forth.org.ru ; Started by A.Cherezov
+Version 4.20 Build 001 at 21.Jan.2009
+
+UNHANDLED EXCEPTION: FFFFFFFE 
+RETURN STACK: 
+0046EFB8 :  0055516C CATCH
+0046EFBC :  00000000 
+0046EFC0 :  0046FF84 
+0046EFC4 :  0056B658 FATAL-HANDLER1
+0046EFC8 :  00555104 THROW
+0046EFCC :  0057E7E3 ADD-CONST-VOC
+0046EFD0 :  00595A6A CON-MAIN
+SOURCE: 
+
+^ Missing file with constants
+
+THREAD EXITING.
