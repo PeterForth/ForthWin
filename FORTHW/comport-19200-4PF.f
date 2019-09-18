@@ -70,7 +70,7 @@ HERE DUP COMMTIMEOUTS DUP ALLOT ERASE VALUE CommTimeouts
 
 \ 
 \ Opening com port by his name
-: ComOpen ( แ-addr u -> handle )
+: ComOpen ( รก-addr u -> handle )
 DROP >R
 0 0 OPEN_EXISTING 0 0 GENERIC_READ GENERIC_WRITE OR R> CreateFileA
 DUP -1 = IF DROP 0 THEN ;
@@ -192,21 +192,23 @@ CREATE SENDKBUF  256 ALLOT
            CR    ." ------COMMUNICATION PROGRAM------" CR
            CR    ." ------   ESC  TO EXIT   ---------" CR           
            SENDKBUF  256 BLANK 
-	  COM2
-	IF  ." COM2  19200 N 8  1 Open "  CR  
-        ." USE  'SPACE'  TO SEND ANY COMMAND " CR CR 
-	COMClear
+	  COM2  \ TRY TO OPEN COM2 IF NOT EXIST EXIT TERMINAL 
+        IF  ." COM2  19200 N 8  1 Open "  CR  
+            ." USE  'SPACE'  TO SEND ANY COMMAND " CR CR 
+	 COMClear
 	 BEGIN
-	 
-	  com2 COMRead .COM
-     
-      KEY? IF KEY 27 = IF EXITCOM EXIT THEN KEY-SEND  THEN
-
-	 AGAIN
+          	  com2 COMRead .COM
+                   KEY? IF  
+	                   KEY 27 = IF EXITCOM EXIT  \ ESCAPE TO EXIT TERMINAL
+			            ELSE
+                                      KEY-SEND  
+				    THEN
+	                THEN
+	  AGAIN
 	THEN
 ;
 
-  main
+  main   
 
 
  
@@ -233,33 +235,9 @@ COMRead (addr u handle -> c-addr u) - read a string from com into the buffer
 COMWrite (c-addr u handle ->) - write a line to com port
 COMIn (handle - char) - receiving a character from a port
 COMOut (char handle -) - transmit character to open port
-COMSet (handle BaudRate ByteSize StopBits Parity -> ior) - setting
-		port
+COMSet (handle BaudRate ByteSize StopBits Parity -> ior) - setting port
 COMClear (handle ->) - clears the send / receive queue in the port driver com
 
-
-
-\EOF
-
-VARIABLE BUFCOM
-VARIABLE READBYTE
-VARIABLE WRITEBYTE
-
-: COMMLOOPTEST    COM2  IF  COMClear ELSE EXIT THEN 
- ." Type any key" CR
- BEGIN
-   KEY
-   DUP ." Write to Com:" . CR
-   DUP BUFCOM !
-   com6 ( @ )  BUFCOM 4 READBYTE 0 WriteFile DROP
-
-   0 BUFCOM !
-    com2 ( @ )  BUFCOM 4 WRITEBYTE 0 ReadFile DROP
-   BUFCOM @ ." Read From Com:" . CR
-
-   0x1B =               \ escape to quit
- UNTIL
-;
 
  
 
