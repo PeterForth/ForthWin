@@ -1,28 +1,25 @@
 #  ForthWin
 
-a new Win32forth compatible system , that pretends to overcome the false virus detection of v >6.10
+A modern forth for PCs in the new decade
 
-Mission
 
-In the hope to continue the legacy of Win32forth and resolving the antivirus False positive,
-we started this new project triying to keep compatibility to it.
+A platform born from  Win32forth USA + SP-Forth  Russia ,  mantained by a new community of programmers . 
 
-Why ?
+ 
+Forth2020
 
-Win32forth is regrettably blacklisted on the AV engines at a level that is not possible to advance further.
-What does this mean ? Today we have any chances to install Win32f on a modern computer without the automatic
-deletion by the firewall AV. (+ Win32f is also prohibited to run on any web-servers)
-This is not a new or unknown problem, it was discovered over 9 years ago as the antivirus engines started to see
-Win32forth as a threat. After much effort from the development community and mantainers, there was any solution.
-We are grateful to all the people involved on the process of detection, and the eforts they did seeking a solution.
+Rescuing Win32forth  heritage  and  creating a new  base of  programs that run on modern GUIs .  
 
-ForthWin
+Since this is a new project( to extend life of  older Forths)  we decided to give it a fresh new name and  
 
-A change in name for the next project is mandatory, since the problems commented above involve the detection
-of the program name too.
-As the first option we decided to go along with ForthWin.
+we call it  Forth2020  (it runs also on Linux ).
+
+
 
 A 2 lane road
 
-We like to say this is a 2 lane road. Developing ForthWin will contribute
-to experimentation and also extend the life of Win32forth aplications. 
+We like to program with Forth on Windows/Linux  , Win32forth was without doubt
+
+the best project all arround.  So this is a 2 lane road, developing Forth2020 will contribute
+
+to experimentation and also extend life for Win32forth and SP-Forth applications. 
